@@ -3,14 +3,17 @@ FROM node:19.5.0-alpine AS build
 
 WORKDIR /app
 
+# Install build dependencies (if missing)
+RUN apk add --no-cache bash
+
 # Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the application and build
 COPY . .
-RUN npm run build
 RUN ls -alh /app
+RUN npm run build
 
 # Stage 2: Serve the built app with Nginx
 FROM nginx:alpine
