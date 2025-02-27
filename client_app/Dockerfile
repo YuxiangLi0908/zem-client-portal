@@ -10,6 +10,7 @@ RUN npm install
 # Copy the rest of the application and build
 COPY . .
 RUN npm run build
+RUN ls -alh /app
 
 # Stage 2: Serve the built app with Nginx
 FROM nginx:alpine
