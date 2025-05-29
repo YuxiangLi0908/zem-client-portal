@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 </script>
@@ -44,4 +44,13 @@ header {
     flex-wrap: wrap;
   }
 }
-</style>
+</style> -->
+<template>
+  <router-view />
+</template>
+
+<script>
+export default {
+  name: 'App'
+}
+</script>
