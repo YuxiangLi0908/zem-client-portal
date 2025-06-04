@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     async login() {
-      const response = await fetch('http://127.0.0.1:8000/login', {
+      const response = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: this.username, password: this.password })
