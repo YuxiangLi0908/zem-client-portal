@@ -12,6 +12,7 @@
             <input 
               v-model="username" 
               type="text" 
+              autocomplete="username"
               placeholder="Enter your username"
             >
           </div>
@@ -20,6 +21,7 @@
             <input 
               v-model="password" 
               type="password" 
+              autocomplete="current-password"
               placeholder="Enter your password"
             >
           </div>
@@ -38,42 +40,43 @@ export default {
       password: ''
     }
   },
-  async login() {
-    const response = await fetch('http://localhost:8000/login', {  //向后端发送用户名和密码的POST请求
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: this.username, password: this.password })
-    })
-    console.log('响应状态',response.status);
-    if (response.ok) {  //如果认证成功，保存信息到localStorage
-      const data = await response.json()
-      localStorage.setItem('token', data.access_token)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      localStorage.setItem('username', this.username)
-      this.$router.push('/home')
-    } else {
-      alert('Invalid login')
+  methods: {
+    async login() {
+      const response = await fetch('http://localhost:8000/login', {  //向后端发送用户名和密码的POST请求
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: this.username, password: this.password })
+      })
+      console.log('响应状态',response.status);
+      if (response.ok) {  //如果认证成功，保存信息到localStorage
+        const data = await response.json()
+        localStorage.setItem('token', data.access_token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('username', this.username)
+        this.$router.push('/home')
+      } else {
+        alert('Invalid login')
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-/* 基础重置 */
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* 全屏容器 */
+
 .login-wrapper, .login-wrapper * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 绝对定位确保全屏覆盖 */
 .login-wrapper {
   position: fixed;
   top: 0;
@@ -83,7 +86,7 @@ export default {
   overflow: auto;
   background: #f8f9fa url('@/assets/images/warehouse-bg.jpg') no-repeat center center;
   background-size: cover;
-  /* 添加半透明遮罩提高文字可读性 */
+  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,7 +102,6 @@ export default {
   max-width: 450px;
 }
 
-/* 登录框样式 */
 .login-box {
   background: transparent;
   box-shadow: none;
@@ -114,7 +116,7 @@ export default {
 }
 
 .zem-logo img {
-  height: 100px; /* 适当放大logo */
+  height: 100px; 
   width: auto;
   transition: all 0.3s ease; /* 添加悬停动画 */
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
@@ -150,7 +152,7 @@ export default {
   background: transparent;
   box-shadow: none;
   padding: 0;
-  margin-top: 10px; /* 与logo区域间距 */
+  margin-top: 10px; 
 }
 
 .input-group label {
@@ -180,8 +182,6 @@ export default {
   box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
 }
 
-
-/* 添加输入图标效果（可选） */
 .input-group::before {
   content: "";
   position: absolute;
@@ -232,7 +232,6 @@ button:hover {
   background: #3367d6;
 }
 
-/* 响应式调整 */
 @media (max-width: 768px) {
   .login-box {
     padding: 30px 20px;
