@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     async login() {
-      const response = await fetch('http://localhost:8000/login', {  //向后端发送用户名和密码的POST请求
+      const response = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/login', {  //向后端发送用户名和密码的POST请求
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: this.username, password: this.password })
