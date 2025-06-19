@@ -1,9 +1,13 @@
 <template>
   <div class="shipping-card">
     <div class="shipping-header">
-      <h3>🚢 柜号 {{ container.container_number }}--{{ getStatusText }}</h3>
+      <h3>
+        <span class="header-icon">📋</span>
+        柜号 {{ container.container_number }}
+        <span class="status-tag" :class="getStatusClass">{{ getStatusText }}</span>
+      </h3>
     </div>
-    <!-- 基本信息区块 -->
+
     <div class="info-section basic-info">
       <h4 class="section-title">基本信息</h4>
       <div class="info-grid">
@@ -18,7 +22,6 @@
       </div>
     </div>
 
-    <!-- 船舶信息区块 -->
     <div class="info-section vessel-info">
       <h4 class="section-title">船舶信息</h4>
       <div class="info-grid">
@@ -66,32 +69,44 @@ export default {
       return this.data.retrieval || {}
     },
     order_type() {
-        return this.data.order_type || {}
+      return this.data.order_type || {}
+    },
+    getStatusText() {
+      return this.data.getStatusText || '状态未知';
     },
     etaStatus() {
-        if (!this.vessel.vessel_eta) return null;
-        
-        const etaDate = new Date(this.vessel.vessel_eta);
-        const now = new Date();
-        const threeDaysLater = new Date();
-        threeDaysLater.setDate(now.getDate() + 3);
-        
-        if (etaDate < now) {
-            return 'arrived'; // 已到港
-            } else if (etaDate <= threeDaysLater) {
-            return 'coming'; // 三天内到港
-        }
-        return null; // 三天外不显示
+      if (!this.vessel.vessel_eta) return null;
+      
+      const etaDate = new Date(this.vessel.vessel_eta);
+      const now = new Date();
+      const threeDaysLater = new Date();
+      threeDaysLater.setDate(now.getDate() + 3);
+      
+      if (etaDate < now) {
+        return 'arrived'; // 已到港
+      } else if (etaDate <= threeDaysLater) {
+        return 'coming'; // 三天内到港
+      }
+      return null; // 三天外不显示
     },
     etaStatusText() {
-        switch(this.etaStatus) {
+      switch(this.etaStatus) {
         case 'arrived': return '已到港';
         case 'coming': return '即将到港';
         default: return '';
-        }
+      }
     },
     getEtaStatusClass() {
-        return this.etaStatus ? `eta-${this.etaStatus}` : '';
+      return this.etaStatus ? `eta-${this.etaStatus}` : '';
+    },
+    
+    // 添加状态样式类
+    statusClass() {
+      return {
+        'status-arrived': this.getStatusText.includes('到港'),
+        'status-delivering': this.getStatusText.includes('派送中'),
+        'status-completed': this.getStatusText.includes('完成')
+      };
     }
   },
   methods: {
@@ -119,16 +134,71 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #d1e0f0;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .shipping-header h3 {
-  color:rgb(1, 11, 19);
+  color: #1a3a5f;
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+
+.header-icon {
+  font-size: 1.4em;
+}
+
+.status-tag {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-left: 10px;
+}
+
+.status-tag.preparing {
+  background: #fff3e0;
+  color: #ff6d00;
+  border: 1px solid #ff6d0030;
+}
+
+.status-tag.shipping {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #1976d230;
+}
+
+.status-tag.arrived {
+  background: #e8f5e9;
+  color: #388e3c;
+  border: 1px solid #388e3c30;
+}
+
+.status-tag.completed {
+  background: #f3e5f5;
+  color: #8e24aa;
+  border: 1px solid #8e24aa30;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #5a6268;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #343a40;
+  font-size: 0.95rem;
+}
+
 
 .shipping-status {
   padding: 6px 12px;
@@ -177,18 +247,6 @@ export default {
   flex-direction: column;
 }
 
-.label {
-  font-size: 0.8rem;
-  color: #5a6268;
-  margin-bottom: 4px;
-  font-weight: 600;
-}
-
-.value {
-  font-weight: 600;
-  color: #343a40;
-  font-size: 0.95rem;
-}
 
 .basic-info {
   background-color: #f8f9fa;
@@ -259,7 +317,4 @@ export default {
   border: 1px solid #ffd666;
 }
 
-.value {
-  position: relative; /* 为标签定位做准备 */
-}
 </style>

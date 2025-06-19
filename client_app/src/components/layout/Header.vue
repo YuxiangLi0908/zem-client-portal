@@ -202,6 +202,7 @@ export default {
   padding: 10px 0;
   font-size: 14px;
 }
+
 .container {
   width:100%;
 }

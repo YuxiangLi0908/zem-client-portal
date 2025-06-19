@@ -1,28 +1,21 @@
 <template>
   <div class="horizontal-timeline">
-    <!-- 海运阶段标题 -->
     <div class="ocean-header">
-      <h3>海运阶段</h3>
+      <h3>🚢 海运阶段</h3>
     </div>
     
-    <!-- 海运时间轴 -->
     <div class="timeline-track ocean-track">
       <div v-for="(event, index) in filteredPreportHistory" 
            :class="['timeline-node', event.status]"
            :key="index">
-        <div class="event-icon">{{ getStatusIcon(event.status) }}</div>
-        <div class="timestamp">{{ formatTime(event.timestamp) }}</div>
-        <div class="event-desc">{{ event.description }}</div>
+        <div class="event-content">
+          <div class="event-icon">{{ getStatusIcon(event.status) }}</div>
+          <div class="timestamp">{{ formatTime(event.timestamp) }}</div>
+          <div class="event-desc">{{ event.description }}</div>
+        </div>
         <div class="connector" v-if="index < filteredPreportHistory.length-1"></div>
       </div>
     </div>
-    
-    <!-- 拆柜分割线 -->
-    <div class="split-section">
-      <div class="split-line"></div>
-      <div class="split-icon">📦 → ✂️</div>
-    </div>
-    
   </div>
 </template>
 
@@ -64,7 +57,7 @@ export default {
     getStatusIcon(status) {
       const icons = {
         'ORDER_CREATED': '📝',
-        'IN_TRANSIT': '🚢',
+        'IN_TRANSIT': '⛴️',
         'ARRIVE_AT_WAREHOUSE': '🏭',
         'OFFLOAD': '✂️'
       }
@@ -89,16 +82,21 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #d1e0f0;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
 .ocean-header h3 {
-  color:rgb(1, 11, 19);
+  color: #1a3a5f;
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+
 
 .ocean-phase {
   background-color: #e6f7ff;
@@ -127,17 +125,11 @@ export default {
   border-top: 2px dashed #52c41a;
 }
 
-/* 时间节点 */
 .timeline-node {
   position: relative;
-  padding: 10px 15px;
-  background: white;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  margin: 0 20px;
+  margin: 0 15px; 
+  flex: 1;
   min-width: 160px;
-  text-align: center;
-  border-top: 3px solid transparent;
 }
 
 .timeline-node.ORDER_CREATED {
@@ -153,18 +145,28 @@ export default {
   border-top-color: #fa8c16;
 }
 
+.event-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  height: 100%;
+}
+
 .event-icon {
-  font-size: 1.8rem; /* 从1.2rem增大到1.8rem */
-  margin-bottom: 12px; /* 增加下边距 */
-  width: 50px; /* 固定宽度 */
-  height: 50px; /* 固定高度 */
+  font-size: 1.8rem;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 10px; /* 居中并增加下边距 */
-  background: #f8f8f8; /* 添加浅色背景 */
-  border-radius: 50%; /* 圆形背景 */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 轻微阴影 */
+  margin: 0 auto 10px;
+  background: #f8f8f8;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .timestamp {
@@ -176,50 +178,25 @@ export default {
 .event-desc {
   font-size: 0.9rem;
   font-weight: 500;
+  text-align: center;
 }
 
-/* 连接线 */
 .connector {
   position: absolute;
-  right: -20px;
+  right: -15px;
   top: 50%;
-  width: 20px;
+  width: 15px;
   height: 2px;
   background: #ddd;
-}
-
-/* 拆柜分割区域 */
-.split-section {
-  position: relative;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.split-line {
-  position: absolute;
-  width: 80%;
-  height: 2px;
-  background: linear-gradient(90deg, #1890ff, #52c41a);
-  top: 50%;
-}
-
-.split-icon {
-  background: white;
-  font-size: 1.5rem;
-  padding: 12px;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px #722ed1;
-  z-index: 1;
+  transform: translateY(-50%);
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
     .event-icon {
-        font-size: 1.5rem;
-        width: 40px;
-        height: 40px;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
     }
     .event-icon:hover {
         transform: scale(1.1);
@@ -231,18 +208,19 @@ export default {
     }
   
     .timeline-node {
-        padding: 15px; /* 增加内边距 */
-        min-width: 180px;
+        margin: 10px 0;
+        width: 100%;
+        max-width: 220px;
     }
   
     .connector {
-        right: auto;
-        bottom: -20px;
-        left: 50%;
-        top: 25%;
-        width: 2px;
-        height: 20px;
-        transform: translateX(-50%);
+      right: auto;
+      bottom: -15px;
+      left: 50%;
+      top: auto;
+      width: 2px;
+      height: 15px;
+      transform: translateX(-50%);
     }
   
     .ocean-track, .land-track {
