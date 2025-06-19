@@ -33,19 +33,26 @@ export default {
   methods: {
     async trackOrder() {
         const token = localStorage.getItem('token').trim();
-        console.log("token", token); 
-
-        const res = await fetch('http://localhost:8000/order_tracking', {
+        const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/order_tracking', {
             method: 'POST',
             headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ container_number: this.container_number }) // 硬编码测试数据
+            body: JSON.stringify({ container_number: this.containerNumber }) 
         });
         
-        console.log("响应状态:", res.status);
-        console.log("响应内容:", await res.text());
+        if (res.ok){
+          const responseData = await res.text();
+          this.$router.push({
+            path: '/search',
+            query: { 
+              data: encodeURIComponent(responseData) 
+            }
+          });
+        } else {
+          console.error("请求失败:", res.status);
+        }
     }
   }
 }

@@ -131,6 +131,7 @@ export default {
   methods: {
     async login() {
       try {
+        console.log('登录信息',this.loginForm);
         const response = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
