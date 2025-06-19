@@ -39,7 +39,7 @@
           <div class="menu-extra">
             <ul>
               <li class="search-box">
-                <a href="#search" class="flat-search"><i class="fa fa-search"></i></a>
+                <a href="search" class="flat-search"><i class="fa fa-search"></i></a>
               </li>
               <template v-if="isAuthenticated">
                 <li class="user-container">
