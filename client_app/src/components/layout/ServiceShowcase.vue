@@ -7,7 +7,7 @@
         <div class="imagebox-item" :style="{ 'margin-left': '300px' }">
           <div class="imagebox-hover">
             <img src="@/assets/images/imagebox/1.jpg" alt="Transport Service">
-            <h5>Why choose canava transport?</h5>
+            <h5>Why choose ZEM transport?</h5>
             <div class="hover-content">             
               <p>At Canava Transport, we know time is of the essence...</p>
               <router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>
@@ -18,7 +18,7 @@
         <div class="imagebox-item">
           <div class="imagebox-hover">
             <img src="@/assets/images/imagebox/2.jpg" alt="Transport Service">
-            <h5>Why choose canava transport?</h5>
+            <h5>Why choose ZEM transport?</h5>
             <div class="hover-content">           
               <p>At Canava Transport, we know time is of the essence...</p>
               <router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>
@@ -29,7 +29,7 @@
         <div class="imagebox-item" :style="{ 'margin-right': '300px' }">
           <div class="imagebox-hover">
             <img src="@/assets/images/imagebox/3.jpg" alt="Transport Service">
-            <h5>Why choose canava transport?</h5>
+            <h5>Why choose ZEM transport?</h5>
             <div class="hover-content">             
               <p>At Canava Transport, we know time is of the essence...</p>
               <router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>
