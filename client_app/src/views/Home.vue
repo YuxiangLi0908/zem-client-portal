@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <MainHeader />
     <Slider />
-    
+    <SearchHeader />
 
     <ServiceShowcase />
     <div class="flat-row bg-scheme pad-top0px pad-bottom0px" style="background-color: #32bfc0; color: white; width: 100%; padding: 20px 0;">
@@ -23,14 +23,14 @@
 <script>
 import MainHeader from '@/components/layout/Header.vue'
 import Slider from '@/components/Slider.vue'
-
+import SearchHeader from '@/components/searchItem/SearchHeader.vue'
 import ServiceShowcase from '@/components/layout/ServiceShowcase.vue'
 export default {
   name: 'App',
   components: {
     MainHeader,
     Slider,
-    
+    SearchHeader,
     ServiceShowcase,
   },
   mounted() {

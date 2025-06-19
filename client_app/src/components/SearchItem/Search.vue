@@ -8,8 +8,7 @@
       <div class="visualization-section" style="background: #ffffff">
         <FlightSummary :data="preport_timenode" />
         <TimelineTabs :preport="preport_timenode" :postport="postport_timenode" />
-        <DistributionGrid :shipments="postport_timenode.shipment" />
-        <WarehouseMatrix :shipments="postport_timenode.shipment" />
+        <WarehouseT :shipments="postport_timenode.shipment" />
       </div>     
     </div>
   </div>  
@@ -22,8 +21,7 @@ import SearchHeader from '@/components/searchItem/SearchHeader.vue'
 
 import FlightSummary from './FlightSummary.vue'
 import TimelineTabs from './TimelineTabs.vue'
-import DistributionGrid from './DistributionGrid.vue'
-
+import WarehouseT from './WarehouseT.vue'
 
 export default {
   components: {
@@ -32,11 +30,10 @@ export default {
 
     TimelineTabs,
     FlightSummary,
-    DistributionGrid
+    WarehouseT
   },
   data() {
     return {
-      // 初始化数据结构
       postport_timenode: {
         shipment: []
       },
@@ -49,18 +46,33 @@ export default {
     }
   },
   computed: {
-    // 格式化数据以便显示
+    // 格式化数据
     formattedData() {
       if (!this.responseData) return '暂无数据';
       
       try {
-        // 如果是JSON字符串，则格式化输出
         const parsed = JSON.parse(this.responseData);
         return JSON.stringify(parsed, null, 2);
       } catch {
-        // 如果不是JSON，直接显示
         return this.responseData;
       }
+    },
+
+    getStatusText() {
+      if (this.postport_timenode?.shipment?.length > 0) {
+        const allArrived = this.postport_timenode.shipment.every(item => item.is_arrived === true);
+        return allArrived ? '全部派送完成' : '派送中';
+      }
+      
+      if (this.postport_timenode?.shipment?.length > 0) {
+        const arrivedCount = this.postport_timenode.shipment.filter(item => item.is_arrived === true).length;
+        const totalCount = this.postport_timenode.shipment.length;
+        
+        if (arrivedCount === totalCount) return '全部派送完成';
+        if (arrivedCount > 0) return `部分派送中 (${arrivedCount}/${totalCount})`;
+        return '待派送';
+      }
+      return '状态更新中';
     }
   },
   created() {
@@ -73,9 +85,9 @@ export default {
           history: [],
           container: {},
           vessel: {},
-          retrieval: {}
+          retrieval: {},
         };
-        
+        this.preport_timenode.getStatusText = this.getStatusText;
         this.postport_timenode = parsedData.postport_timenode || {
           shipment: []
         };
@@ -83,6 +95,19 @@ export default {
       } catch (error) {
         console.error('数据解析失败:', error);
       }
+    }
+  },
+
+  methods: {
+    formatStatusText(text) {
+      const statusMap = {
+        '创建订单': '订单创建',
+        '到达港口': '已到港', 
+        '预约港口提柜': '预约提柜',
+        '港口提柜完成': '已提柜',
+        '拆柜完成': '已拆柜'
+      };
+      return statusMap[text] || text;
     }
   }
 }
