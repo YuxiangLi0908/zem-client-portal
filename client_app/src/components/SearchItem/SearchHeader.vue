@@ -33,7 +33,7 @@ export default {
   methods: {
     async trackOrder() {
         const token = localStorage.getItem('token').trim();
-        const res = await fetch('http://localhost:8000/order_tracking', {
+        const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/order_tracking', {
             method: 'POST',
             headers: { 
             'Content-Type': 'application/json',
