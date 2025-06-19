@@ -23,7 +23,7 @@
 <script>
 import MainHeader from '@/components/layout/Header.vue'
 import Slider from '@/components/Slider.vue'
-import SearchHeader from '@/components/SearchItem/SearchHeader.vue'
+import SearchHeader from '@/components/searchItem/SearchHeader.vue'
 import ServiceShowcase from '@/components/layout/ServiceShowcase.vue'
 export default {
   name: 'App',
