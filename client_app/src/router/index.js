@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '../views/Login.vue'
 import HomePage from '../views/Home.vue'
 import SliderPage from '../components/Slider.vue'
-import SearchPage from '../components/searchItem/Search.vue'
+import SearchPage from '../components/SearchItem/Search.vue'
 import UserDashboard from '../views/UserDashboard.vue'
 
 const routes = [
