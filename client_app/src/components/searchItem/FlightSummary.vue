@@ -4,7 +4,9 @@
       <h3>
         <span class="header-icon">📋</span>
         柜号 {{ container.container_number }}
-        <span class="status-tag" :class="getStatusClass">{{ getStatusText }}</span>
+        <span class="status-tag" :class="statusClass">
+          <i :class="statusIcon"></i> {{ getStatusText }}
+        </span>
       </h3>
     </div>
 
@@ -100,13 +102,24 @@ export default {
       return this.etaStatus ? `eta-${this.etaStatus}` : '';
     },
     
-    // 添加状态样式类
     statusClass() {
+      const text = this.getStatusText.toLowerCase();
       return {
-        'status-arrived': this.getStatusText.includes('到港'),
-        'status-delivering': this.getStatusText.includes('派送中'),
-        'status-completed': this.getStatusText.includes('完成')
+        'status-created': text.includes('创建订单'),
+        'status-arrived': text.includes('到港') || text.includes('到达港口'),
+        'status-retrieved': text.includes('提柜'),
+        'status-offloaded': text.includes('拆柜'),
+        'status-delivered': text.includes('派送完成')
       };
+    },
+    statusIcon() {
+      const text = this.getStatusText.toLowerCase();
+      if (text.includes('创建订单')) return 'fas fa-file-alt';
+      if (text.includes('到港')) return 'fas fa-ship';
+      if (text.includes('提柜')) return 'fas fa-truck-loading';
+      if (text.includes('拆柜')) return 'fas fa-box-open';
+      if (text.includes('派送')) return 'fas fa-check-circle';
+      return 'fas fa-info-circle';
     }
   },
   methods: {
@@ -154,11 +167,48 @@ export default {
 }
 
 .status-tag {
-  padding: 4px 12px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
   border-radius: 16px;
-  font-size: 0.85rem;
+  font-size: 14px;
   font-weight: 500;
   margin-left: 10px;
+  gap: 6px;
+}
+
+.status-created {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+}
+
+.status-arrived {
+  background-color: #e8f5e9;
+  color: #388e3c;
+  border: 1px solid #c8e6c9;
+}
+
+.status-retrieved {
+  background-color: #fff3e0;
+  color: #ff6d00;
+  border: 1px solid #ffe0b2;
+}
+
+.status-offloaded {
+  background-color: #f3e5f5;
+  color: #8e24aa;
+  border: 1px solid #e1bee7;
+}
+
+.status-delivered {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.status-tag i {
+  font-size: 12px;
 }
 
 .status-tag.preparing {

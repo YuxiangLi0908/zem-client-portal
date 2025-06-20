@@ -149,8 +149,8 @@ export default {
         'unscheduled': '📋',
         'scheduled': '📅',
         'shipped': '🚚',
-        'arrived': '📌', 
-        'pod_uploaded': '📦'
+        'arrived': '🤝', 
+        'pod_uploaded': '📝'
       }
     }
   },
@@ -509,9 +509,11 @@ export default {
   }
 }
 
-.status-icon-wrapper {
-  display: inline-block;
-  margin-right: 8px;
+.status-icon-wrapper .status-icon {
+  font-size: 28px; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .status-icon {
