@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     filteredPreportHistory() {
-      const mainEvents = ['ORDER_CREATED', 'IN_TRANSIT', 'ARRIVE_AT_WAREHOUSE', 'OFFLOAD']
+      const mainEvents = ['ORDER_CREATED', 'ARRIVED_AT_PORT', 'PORT_UNLOADING', 'PORT_PICKUP_SCHEDULED', 'ARRIVE_AT_WAREHOUSE', 'OFFLOAD']
       return (this.preport.history || []).filter(event => 
         mainEvents.includes(event.status)
       )
@@ -57,9 +57,12 @@ export default {
     getStatusIcon(status) {
       const icons = {
         'ORDER_CREATED': '📝',
+        'ARRIVED_AT_PORT': '⛴️',       
+        'PORT_UNLOADING': '🏗️',       
+        'PORT_PICKUP_SCHEDULED': '📅',
         'IN_TRANSIT': '⛴️',
         'ARRIVE_AT_WAREHOUSE': '🏭',
-        'OFFLOAD': '✂️'
+        'OFFLOAD': '🛠️'
       }
       return icons[status] || '●'
     }
@@ -110,15 +113,10 @@ export default {
   border-left: 3px solid #52c41a;
 }
 
-/* 时间轴轨道 */
 .timeline-track {
   display: flex;
   padding: 15px 0;
   position: relative;
-}
-
-.ocean-track {
-  border-top: 2px dashed #1890ff;
 }
 
 .land-track {
