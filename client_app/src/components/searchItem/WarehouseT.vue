@@ -177,7 +177,7 @@ export default {
           groups.arrived.push(item)
         } else if (item.is_shipped) {
           groups.shipped.push(item)
-        } else if (item.shipment_batch_number) {
+        } else if (item.master_shipment_batch_number) {
           groups.scheduled.push(item)
         } else {
           groups.unscheduled.push(item)
