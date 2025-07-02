@@ -30,7 +30,7 @@
           <div v-for="(item, i) in group" :key="i" class="parcel-card">
             <div class="card-header">
               <span class="destination">{{ item.destination }}</span>
-              <span class="destination" v-if="['scheduled', 'shipped'].includes(status)">ETA {{ formatTime(item.shipment_schduled_at) }}</span>
+              <span class="destination" v-if="['scheduled', 'shipped'].includes(status)">ETA {{ formatTime(item.shipment_appointment) }}</span>
               <span class="priority-tag" :class="getPriorityClass(item)">
                 {{ getPriorityText(item) }}
               </span>
