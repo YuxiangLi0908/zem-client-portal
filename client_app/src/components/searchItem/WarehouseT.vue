@@ -30,7 +30,7 @@
           <div v-for="(item, i) in group" :key="i" class="parcel-card">
             <div class="card-header">
               <span class="destination">{{ item.destination }}</span>
-              <span class="destination" v-if="['scheduled', 'shipped'].includes(status)">ETA {{ formatTime(item.shipment_appointment) }}</span>
+              <span class="destination" v-if="['scheduled', 'shipped'].includes(status)">ETA {{ formatTime(item.shipment_schduled_at) }}</span>
               <span class="priority-tag" :class="getPriorityClass(item)">
                 {{ getPriorityText(item) }}
               </span>
@@ -57,7 +57,7 @@
                 <template v-if="status === 'shipped'">
                   <div class="time-item">
                     <div class="time-label">预约</div>
-                    <div class="time-value">{{ formatTime(item.shipment_appointment) }}</div>
+                    <div class="time-value">{{ formatTime(item.shipment_schduled_at) }}</div>
                   </div>
                   <div class="time-separator">→</div>
                   <div class="time-item highlight">
@@ -70,7 +70,7 @@
                 <template v-else-if="status === 'arrived'">
                   <div class="time-item">
                     <div class="time-label">预约</div>
-                    <div class="time-value">{{ formatTime(item.shipment_appointment) }}</div>
+                    <div class="time-value">{{ formatTime(item.shipment_schduled_at) }}</div>
                   </div>
                   <div class="time-separator">→</div>
                   <div class="time-item">
@@ -88,7 +88,7 @@
                 <template v-else-if="status === 'pod_uploaded'">
                     <div class="time-item">
                         <div class="time-label">预约</div>
-                        <div class="time-value">{{ formatTime(item.shipment_appointment) }}</div>
+                        <div class="time-value">{{ formatTime(item.shipment_schduled_at) }}</div>
                     </div>
                     <div class="time-separator">→</div>
                     <div class="time-item">
@@ -115,7 +115,7 @@
                 <template v-else-if="status === 'scheduled'">
                   <div class="time-item highlight">
                     <div class="time-label">预约</div>
-                    <div class="time-value">{{ formatTime(item.shipment_appointment) }}</div>
+                    <div class="time-value">{{ formatTime(item.shipment_schduled_at) }}</div>
                   </div>
                 </template>
               </div>
