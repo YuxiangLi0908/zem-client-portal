@@ -24,7 +24,7 @@ export default {
   async created() {
     const token = localStorage.getItem('token')
     try {
-      const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/user/orders', {
+      const res = await fetch('http://localhost:8000/login', {
         headers: { Authorization: `Bearer ${token}` }
       })
       const data = await res.json()

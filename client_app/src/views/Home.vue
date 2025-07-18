@@ -43,11 +43,14 @@ export default {
     handleScroll() {
       const menu = document.querySelector('.floating-menu');
       const header = this.$refs.header?.$el || document.querySelector('header');
-      if (window.scrollY > header.offsetHeight * 0.5) {
-        menu.classList.add('sticky');
-      } else {
-        menu.classList.remove('sticky');
+      if (menu) {
+        if (window.scrollY > header.offsetHeight * 0.5) {
+          menu.classList.add('sticky');
+        } else {
+          menu.classList.remove('sticky');
+        }
       }
+      
     }
   }
 }

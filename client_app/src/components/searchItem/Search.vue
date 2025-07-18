@@ -30,14 +30,23 @@
         </div>
       </div>
     </div>
+    
+    <div v-else-if="searchType === 'date'">
+      <DateSearchResults 
+        :containers="dateSearchResults"
+        :date-range="dateRange"
+        @view-details="showContainerDetails"
+      />
+    </div>
 
-    <div v-else class="container-tracking">
+    <div v-else-if="searchType === 'container'" class="container-tracking">
       <div class="visualization-section" style="background: #ffffff">
         <FlightSummary :data="preport_timenode" />
         <TimelineTabs :preport="preport_timenode" :postport="postport_timenode" />
         <WarehouseT :shipments="postport_timenode.shipment" />
       </div>     
     </div>
+    {{ data }}
   </div>  
   
 </template>
@@ -48,6 +57,7 @@ import SearchHeader from '@/components/searchItem/SearchHeader.vue'
 import FlightSummary from './FlightSummary.vue'
 import TimelineTabs from './TimelineTabs.vue'
 import WarehouseT from './WarehouseT.vue'
+import DateSearchResults from './DateSearchResults.vue'
 
 export default {
   components: {
@@ -55,7 +65,8 @@ export default {
     SearchHeader,
     TimelineTabs,
     FlightSummary,
-    WarehouseT
+    WarehouseT,
+    DateSearchResults
   },
   data() {
     return {    
@@ -67,11 +78,22 @@ export default {
         container: {},
         vessel: {},
         retrieval: {}
+      },
+      searchType: 'container',
+      dateSearchResults: [],
+      dateRange: {
+        startDate: '',
+        endDate: ''
       }
     }
   },
   computed: {
     shouldShowEmptyContainer() {
+      if (this.searchType === 'date') {
+        console.log('按日期查找');
+        return this.dateSearchResults.length === 0
+      }
+
       return (
         !this.responseData || 
         this.responseData.preport_timenode === null ||
@@ -124,27 +146,74 @@ export default {
       if (!encodedData) return;
       
       try {
-        this.responseData = decodeURIComponent(encodedData);
-        const parsedData = JSON.parse(this.responseData);
         
-        this.preport_timenode = {
-          ...(parsedData.preport_timenode || {
-            history: [],
-            container: {},
-            vessel: {},
-            retrieval: {}
-          })
-        };
-        this.preport_timenode.getStatusText = this.getStatusText;
-        this.postport_timenode = {
-          ...(parsedData.postport_timenode || {
-            shipment: []
-          }),
-        };
         
+        this.searchType = this.$route.query.searchType || 'container'
+
+        if (this.searchType === 'date') {
+          // 处理日期范围查询结果
+          const parsedData = typeof encodedData === 'string' ? JSON.parse(encodedData) : encodedData;
+          console.log('Date search results:', parsedData.result);
+          this.dateSearchResults = parsedData.result || [];
+          this.dateRange = {
+            startDate: this.$route.query.startDate || '',
+            endDate: this.$route.query.endDate || ''
+          }
+        } else {
+          this.responseData = decodeURIComponent(encodedData);
+          const parsedData = JSON.parse(this.responseData);
+          this.preport_timenode = {
+            ...(parsedData.preport_timenode || {
+              history: [],
+              container: {},
+              vessel: {},
+              retrieval: {}
+            })
+          };
+          this.preport_timenode.getStatusText = this.getStatusText;
+          this.postport_timenode = {
+            ...(parsedData.postport_timenode || {
+              shipment: []
+            }),
+          }
+        }       
       } catch (error) {
         console.error('数据解析失败:', error);
       }
+    },
+    showContainerDetails(container) {
+      // 将选中的柜号数据转换为单个柜号查询的格式
+      this.preport_timenode = {
+        container: { container_number: container.basic_info.container_number },
+        vessel: {
+          vessel_eta: container.basic_info.vessel_eta,
+          origin_port: container.basic_info.origin_port,
+          destination_port: container.basic_info.destination_port
+        },
+        history: container.basic_info.history
+      }
+      this.postport_timenode = {
+        shipment: this.flattenShipmentStatus(container.shipment_status)
+      }
+      this.searchType = 'container'
+    },
+    flattenShipmentStatus(shipmentStatus) {
+      // 将分组的货物状态转换为平铺结构
+      const statusOrder = ['unscheduled', 'scheduled', 'shipped', 'arrived', 'with_pod']
+      return statusOrder.flatMap(status => 
+        shipmentStatus[status].map(group => ({
+          destination: group.destination,
+          PO_IDs: group.PO_IDs,
+          status: status,
+          total_cbm: group.total_cbm,
+          total_weight_kg: group.total_weight_kg,
+          pallet_count: group.pallet_count,
+          is_shipment_scheduled: status !== 'unscheduled',
+          is_shipped: ['shipped', 'arrived', 'with_pod'].includes(status),
+          is_arrived: ['arrived', 'with_pod'].includes(status),
+          pod_link: status === 'with_pod' ? '#' : null
+        }))
+      )
     },
     formatStatusText(text) {
       const statusMap = {

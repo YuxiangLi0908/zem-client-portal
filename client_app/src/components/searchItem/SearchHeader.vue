@@ -3,7 +3,7 @@
     <div class="container">
         <div class="search-box">
           <h1 style="color: white; margin-bottom: 20px;"><b>Track Your Container</b></h1>
-
+          {{ data }}
           <!-- 搜索模式切换 -->
           <div class="search-mode-tabs">
             <button 
@@ -62,15 +62,6 @@
               <i class="fa fa-search"></i> Search
             </button>
           </div>
-
-          <button 
-            @click="searchAllContainers" 
-            class="search-all-btn"
-            style="margin-top: 15px;"
-          >
-            <i class="fa fa-list"></i> View All My Containers
-          </button>
-          
         </div>
     </div>
   </div>
@@ -98,18 +89,22 @@ export default {
       const res = await fetch('http://localhost:8000/order_tracking', {
           method: 'POST',
           headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ container_number: this.containerNumber }) 
+          body: JSON.stringify({ 
+            container_number: this.containerNumber,
+          }) 
       });
       
       if (res.ok){
         const responseData = await res.text();
+        console.log(responseData);
         this.$router.push({
           path: '/search',
           query: { 
-            data: encodeURIComponent(responseData) 
+            data: encodeURIComponent(responseData),
+            searchType: 'container' 
           }
         });
       } else {
@@ -121,7 +116,7 @@ export default {
       
       const token = localStorage.getItem('token').trim();
       try {
-        const res = await fetch('http://localhost:8000/orders_by_date', {
+        const res = await fetch('http://localhost:8000/order_tracking_date', {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
@@ -129,16 +124,20 @@ export default {
           },
           body: JSON.stringify({ 
             start_date: this.startDate,
-            end_date: this.endDate 
+            end_date: this.endDate,
           }) 
         });
 
         if (res.ok) {
           const responseData = await res.json();
+          console.log('Parsed data:', responseData);
           this.$router.push({
             path: '/search',
             query: { 
-              data: encodeURIComponent(JSON.stringify(responseData)) 
+              data: JSON.stringify(responseData),
+              searchType: 'date', 
+              startDate: this.startDate,
+              endDate: this.endDate
             }
           });
         } else {
