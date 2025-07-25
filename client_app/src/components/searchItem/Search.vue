@@ -143,18 +143,15 @@ export default {
   },
   methods: {
     parseRouteData(encodedData) {
-      if (!encodedData) return;
-      
-      try {
-        
-        
+      if (!encodedData) return;     
+      try {     
         this.searchType = this.$route.query.searchType || 'container'
 
         if (this.searchType === 'date') {
           // 处理日期范围查询结果
           const parsedData = typeof encodedData === 'string' ? JSON.parse(encodedData) : encodedData;
-          console.log('Date search results:', parsedData.result);
-          this.dateSearchResults = parsedData.result || [];
+          console.log('Date search results:', parsedData);
+          this.dateSearchResults = parsedData.containers || [];
           this.dateRange = {
             startDate: this.$route.query.startDate || '',
             endDate: this.$route.query.endDate || ''
