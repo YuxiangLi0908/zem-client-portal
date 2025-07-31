@@ -67,7 +67,8 @@ export default {
         container: {},
         vessel: {},
         retrieval: {}
-      }
+      },
+      responseData: null
     }
   },
   computed: {
@@ -88,24 +89,6 @@ export default {
       } catch {
         return this.responseData;
       }
-    },
-    getStatusText() {    
-      if (!this.postport_timenode?.shipment || this.postport_timenode.shipment.length === 0) {
-        //表示还没有到港后
-        if (this.preport_timenode?.history?.length > 0){
-          const lastHistory = this.preport_timenode.history[this.preport_timenode.history.length - 1];
-          const statusText = lastHistory.description.split(/[,:]/)[0].trim();
-          return `已${statusText}`;
-        }
-        return '状态更新中';
-      };
-      
-      const shipment = this.postport_timenode.shipment;
-      const arrivedCount = shipment.filter(item => item.is_arrived).length;
-      const totalCount = shipment.length;
-      if (arrivedCount === totalCount) return '全部派送完成';
-      if (arrivedCount > 0) return `部分派送中 (${arrivedCount}/${totalCount})`;
-      return totalCount > 0 ? '待派送' : '状态更新中';
     }
   },
   created() {
@@ -133,9 +116,10 @@ export default {
             container: {},
             vessel: {},
             retrieval: {}
-          })
+          }),
+          getStatusText: this.calculateStatusText(parsedData.preport_timenode, parsedData.postport_timenode)
         };
-        this.preport_timenode.getStatusText = this.getStatusText;
+        
         this.postport_timenode = {
           ...(parsedData.postport_timenode || {
             shipment: []
@@ -146,6 +130,25 @@ export default {
         console.error('数据解析失败:', error);
       }
     },
+    calculateStatusText(preportData, postportData) {
+      const preport = preportData || { history: [] };
+      const postport = postportData || { shipment: [] };
+      
+      if (!postport.shipment || postport.shipment.length === 0) {
+        if (preport.history?.length > 0) {
+          const lastHistory = preport.history[preport.history.length - 1];
+          const statusText = lastHistory.description.split(/[,:]/)[0].trim();
+          return `已${statusText}`;
+        }
+        return '状态更新中';
+      }
+      
+      const arrivedCount = postport.shipment.filter(item => item.is_arrived).length;
+      const totalCount = postport.shipment.length;
+      if (arrivedCount === totalCount) return '全部派送完成';
+      if (arrivedCount > 0) return `部分派送中 (${arrivedCount}/${totalCount})`;
+      return totalCount > 0 ? '待派送' : '状态更新中';
+    },
     formatStatusText(text) {
       const statusMap = {
         '创建订单': '订单创建',
@@ -155,7 +158,8 @@ export default {
         '拆柜完成': '已拆柜'
       };
       return statusMap[text] || text;
-    }
+    },
+    
   }
 }
 </script>
