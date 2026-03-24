@@ -4,6 +4,7 @@ import HomePage from '../views/Home.vue'
 import SliderPage from '../components/Slider.vue'
 import SearchPage from '../components/searchItem/Search.vue'
 import UserDashboard from '../views/UserDashboard.vue'
+import AllContainers from '../views/AllContainers.vue'
 
 const routes = [
   
@@ -12,6 +13,7 @@ const routes = [
   { path: '/slider', name: 'Slider', component: SliderPage },
   { path: '/search', name: 'Search', component: SearchPage },
   { path: '/dashboard', name: 'UserDashboard', component: UserDashboard},
+  { path: '/all-containers', name: 'AllContainers', component: AllContainers},
 ]
 
 const router = createRouter({
