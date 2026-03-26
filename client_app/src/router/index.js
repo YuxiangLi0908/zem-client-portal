@@ -5,6 +5,7 @@ import SliderPage from '../components/Slider.vue'
 import SearchPage from '../components/searchItem/Search.vue'
 import UserDashboard from '../views/UserDashboard.vue'
 import AllContainers from '../views/AllContainers.vue'
+import ContactPage from '../views/Contact.vue'
 
 const routes = [
   
@@ -14,6 +15,7 @@ const routes = [
   { path: '/search', name: 'Search', component: SearchPage },
   { path: '/dashboard', name: 'UserDashboard', component: UserDashboard},
   { path: '/all-containers', name: 'AllContainers', component: AllContainers},
+  { path: '/contact', name: 'Contact', component: ContactPage},
 ]
 
 const router = createRouter({
@@ -22,7 +24,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Login']
+  const publicPages = ['Login', 'Home', 'Contact']
   const authRequired = !publicPages.includes(to.name)
   const token = localStorage.getItem('token')
 
