@@ -32,8 +32,10 @@
           <ul class="menu">
             <li><router-link to="/">Home</router-link></li>
             <li><router-link to="/search">Search</router-link></li>
-            <li><router-link to="/about">Company</router-link></li>
-            <li><router-link to="/services">Services</router-link></li>
+            <!--
+            <li class="menu-hidden-item"><router-link to="/about">Company</router-link></li>
+            <li class="menu-hidden-item"><router-link to="/services">Services</router-link></li>
+            -->
             <li><router-link to="/contact">Contact</router-link></li>
           </ul>
           <div class="menu-extra">
@@ -132,7 +134,7 @@ export default {
     async login() {
       try {
         console.log('登录信息',this.loginForm);
-        const response = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/login', {
+        const response = await fetch('http://localhost:8000/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(this.loginForm)
@@ -633,5 +635,9 @@ button[type="submit"]:hover {
   .company-name {
     display: none;
   }
+}
+
+.menu-hidden-item {
+  display: none;
 }
 </style>
