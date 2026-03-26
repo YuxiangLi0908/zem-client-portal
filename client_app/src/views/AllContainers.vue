@@ -41,78 +41,68 @@
                 </span>
               </td>
               <td>
-                <template v-if="isEmptyBreakdown(getWarehouseBreakdown(container, 'unscheduled'))">
+                <template v-if="isEmpty(getWarehouseItems(container, 'unscheduled'))">
                   0
                 </template>
                 <div v-else class="warehouse-list">
-                  <div :key="'wrapper-' + container.preport_timenode.container.container_number + '-unscheduled'">
-                    <div v-for="(item, index) in getVisibleWarehouses(getWarehouseBreakdown(container, 'unscheduled'), container.preport_timenode.container.container_number, 'unscheduled')" :key="item.dest" class="warehouse-item">
-                      {{ item.text }}
-                    </div>
-                    <button v-if="shouldShowToggle(getWarehouseBreakdown(container, 'unscheduled'), container.preport_timenode.container.container_number, 'unscheduled')" @click="toggleWarehouseList(container.preport_timenode.container.container_number, 'unscheduled')" class="toggle-btn">
-                      {{ getToggleText(container.preport_timenode.container.container_number, 'unscheduled') }}
-                    </button>
+                  <div v-for="item in getDisplayItems(container, 'unscheduled')" :key="item.dest" class="warehouse-item">
+                    {{ item.text }}
                   </div>
+                  <button v-if="hasMany(container, 'unscheduled')" @click="toggle(container, 'unscheduled')" class="toggle-btn">
+                    {{ isExpanded(container, 'unscheduled') ? '收起' : '展开' }}
+                  </button>
                 </div>
               </td>
               <td>
-                <template v-if="isEmptyBreakdown(getWarehouseBreakdown(container, 'scheduled'))">
+                <template v-if="isEmpty(getWarehouseItems(container, 'scheduled'))">
                   0
                 </template>
                 <div v-else class="warehouse-list">
-                  <div :key="'wrapper-' + container.preport_timenode.container.container_number + '-scheduled'">
-                    <div v-for="(item, index) in getVisibleWarehouses(getWarehouseBreakdown(container, 'scheduled'), container.preport_timenode.container.container_number, 'scheduled')" :key="item.dest" class="warehouse-item">
-                      {{ item.text }}
-                    </div>
-                    <button v-if="shouldShowToggle(getWarehouseBreakdown(container, 'scheduled'), container.preport_timenode.container.container_number, 'scheduled')" @click="toggleWarehouseList(container.preport_timenode.container.container_number, 'scheduled')" class="toggle-btn">
-                      {{ getToggleText(container.preport_timenode.container.container_number, 'scheduled') }}
-                    </button>
+                  <div v-for="item in getDisplayItems(container, 'scheduled')" :key="item.dest" class="warehouse-item">
+                    {{ item.text }}
                   </div>
+                  <button v-if="hasMany(container, 'scheduled')" @click="toggle(container, 'scheduled')" class="toggle-btn">
+                    {{ isExpanded(container, 'scheduled') ? '收起' : '展开' }}
+                  </button>
                 </div>
               </td>
               <td>
-                <template v-if="isEmptyBreakdown(getWarehouseBreakdown(container, 'shipped'))">
+                <template v-if="isEmpty(getWarehouseItems(container, 'shipped'))">
                   0
                 </template>
                 <div v-else class="warehouse-list">
-                  <div :key="'wrapper-' + container.preport_timenode.container.container_number + '-shipped'">
-                    <div v-for="(item, index) in getVisibleWarehouses(getWarehouseBreakdown(container, 'shipped'), container.preport_timenode.container.container_number, 'shipped')" :key="item.dest" class="warehouse-item">
-                      {{ item.text }}
-                    </div>
-                    <button v-if="shouldShowToggle(getWarehouseBreakdown(container, 'shipped'), container.preport_timenode.container.container_number, 'shipped')" @click="toggleWarehouseList(container.preport_timenode.container.container_number, 'shipped')" class="toggle-btn">
-                      {{ getToggleText(container.preport_timenode.container.container_number, 'shipped') }}
-                    </button>
+                  <div v-for="item in getDisplayItems(container, 'shipped')" :key="item.dest" class="warehouse-item">
+                    {{ item.text }}
                   </div>
+                  <button v-if="hasMany(container, 'shipped')" @click="toggle(container, 'shipped')" class="toggle-btn">
+                    {{ isExpanded(container, 'shipped') ? '收起' : '展开' }}
+                  </button>
                 </div>
               </td>
               <td>
-                <template v-if="isEmptyBreakdown(getWarehouseBreakdown(container, 'arrived'))">
+                <template v-if="isEmpty(getWarehouseItems(container, 'arrived'))">
                   0
                 </template>
                 <div v-else class="warehouse-list">
-                  <div :key="'wrapper-' + container.preport_timenode.container.container_number + '-arrived'">
-                    <div v-for="(item, index) in getVisibleWarehouses(getWarehouseBreakdown(container, 'arrived'), container.preport_timenode.container.container_number, 'arrived')" :key="item.dest" class="warehouse-item">
-                      {{ item.text }}
-                    </div>
-                    <button v-if="shouldShowToggle(getWarehouseBreakdown(container, 'arrived'), container.preport_timenode.container.container_number, 'arrived')" @click="toggleWarehouseList(container.preport_timenode.container.container_number, 'arrived')" class="toggle-btn">
-                      {{ getToggleText(container.preport_timenode.container.container_number, 'arrived') }}
-                    </button>
+                  <div v-for="item in getDisplayItems(container, 'arrived')" :key="item.dest" class="warehouse-item">
+                    {{ item.text }}
                   </div>
+                  <button v-if="hasMany(container, 'arrived')" @click="toggle(container, 'arrived')" class="toggle-btn">
+                    {{ isExpanded(container, 'arrived') ? '收起' : '展开' }}
+                  </button>
                 </div>
               </td>
               <td>
-                <template v-if="isEmptyBreakdown(getWarehouseBreakdown(container, 'pod_uploaded'))">
+                <template v-if="isEmpty(getWarehouseItems(container, 'pod_uploaded'))">
                   0
                 </template>
                 <div v-else class="warehouse-list">
-                  <div :key="'wrapper-' + container.preport_timenode.container.container_number + '-pod_uploaded'">
-                    <div v-for="(item, index) in getVisibleWarehouses(getWarehouseBreakdown(container, 'pod_uploaded'), container.preport_timenode.container.container_number, 'pod_uploaded')" :key="item.dest" class="warehouse-item">
-                      {{ item.text }}
-                    </div>
-                    <button v-if="shouldShowToggle(getWarehouseBreakdown(container, 'pod_uploaded'), container.preport_timenode.container.container_number, 'pod_uploaded')" @click="toggleWarehouseList(container.preport_timenode.container.container_number, 'pod_uploaded')" class="toggle-btn">
-                      {{ getToggleText(container.preport_timenode.container.container_number, 'pod_uploaded') }}
-                    </button>
+                  <div v-for="item in getDisplayItems(container, 'pod_uploaded')" :key="item.dest" class="warehouse-item">
+                    {{ item.text }}
                   </div>
+                  <button v-if="hasMany(container, 'pod_uploaded')" @click="toggle(container, 'pod_uploaded')" class="toggle-btn">
+                    {{ isExpanded(container, 'pod_uploaded') ? '收起' : '展开' }}
+                  </button>
                 </div>
               </td>
               <td>
@@ -145,7 +135,7 @@ export default {
       containers: [],
       loading: true,
       error: null,
-      expandedWarehouses: {}
+      expandedMap: {}
     }
   },
   mounted() {
@@ -155,7 +145,7 @@ export default {
     async fetchAllContainers() {
       const token = localStorage.getItem('token')
       try {
-        const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/login', {
+        const res = await fetch('http://localhost:8000/user_containers', {
           headers: { Authorization: `Bearer ${token}` }
         })
         const data = await res.json()
@@ -210,79 +200,77 @@ export default {
         return '状态更新中'
       }
     },
-    getWarehouseBreakdown(container, status) {
+    getKey(container, status) {
+      return container.preport_timenode.container.container_number + '_' + status
+    },
+    getWarehouseItems(container, status) {
       if (!container.postport_timenode || !container.postport_timenode.shipment) {
-        return { '0': 0 }
+        return []
       }
       
       const shipments = container.postport_timenode.shipment
-      let filteredShipments = []
+      let filtered = []
       
       switch (status) {
         case 'unscheduled':
-          filteredShipments = shipments.filter(item => !item.master_shipment_batch_number)
+          filtered = shipments.filter(item => !item.master_shipment_batch_number)
           break
         case 'scheduled':
-          filteredShipments = shipments.filter(item => item.master_shipment_batch_number && !item.is_shipped && !item.is_arrived && !item.pod_link)
+          filtered = shipments.filter(item => item.master_shipment_batch_number && !item.is_shipped && !item.is_arrived && !item.pod_link)
           break
         case 'shipped':
-          filteredShipments = shipments.filter(item => item.is_shipped && !item.is_arrived && !item.pod_link)
+          filtered = shipments.filter(item => item.is_shipped && !item.is_arrived && !item.pod_link)
           break
         case 'arrived':
-          filteredShipments = shipments.filter(item => item.is_arrived && !item.pod_link)
+          filtered = shipments.filter(item => item.is_arrived && !item.pod_link)
           break
         case 'pod_uploaded':
-          filteredShipments = shipments.filter(item => item.pod_link)
+          filtered = shipments.filter(item => item.pod_link)
           break
         default:
-          return { '0': 0 }
+          return []
       }
       
-      if (filteredShipments.length === 0) {
-        return { '0': 0 }
-      }
-      
-      const breakdown = {}
-      filteredShipments.forEach(item => {
+      const counts = {}
+      filtered.forEach(item => {
         const dest = item.destination || 'Unknown'
-        breakdown[dest] = (breakdown[dest] || 0) + 1
+        counts[dest] = (counts[dest] || 0) + 1
       })
       
-      return breakdown
-    },
-    isEmptyBreakdown(breakdown) {
-      return Object.keys(breakdown).length === 1 && breakdown['0'] === 0
-    },
-    getWarehouseKey(containerNumber, status) {
-      return `${containerNumber}-${status}`
-    },
-    isExpanded(containerNumber, status) {
-      const key = this.getWarehouseKey(containerNumber, status)
-      return this.expandedWarehouses[key] === true
-    },
-    toggleWarehouseList(containerNumber, status) {
-      const key = this.getWarehouseKey(containerNumber, status)
-      this.$set(this.expandedWarehouses, key, !this.isExpanded(containerNumber, status))
-    },
-    shouldShowToggle(breakdown, containerNumber, status) {
-      const keys = Object.keys(breakdown)
-      return keys.length > 5
-    },
-    getToggleText(containerNumber, status) {
-      return this.isExpanded(containerNumber, status) ? '收起' : '展开'
-    },
-    getVisibleWarehouses(breakdown, containerNumber, status) {
-      const entries = Object.entries(breakdown)
-      const items = entries.map(([dest, count]) => ({
+      return Object.entries(counts).map(([dest, count]) => ({
         dest,
         count,
         text: count === 1 ? dest : `${dest}-${count}`
       }))
-      
-      if (items.length <= 5 || this.isExpanded(containerNumber, status)) {
+    },
+    isEmpty(items) {
+      return items.length === 0
+    },
+    hasMany(container, status) {
+      const items = this.getWarehouseItems(container, status)
+      return items.length > 5
+    },
+    isExpanded(container, status) {
+      const key = this.getKey(container, status)
+      return !!this.expandedMap[key]
+    },
+    toggle(container, status) {
+      const key = this.getKey(container, status)
+      console.log('toggle clicked', key, 'current value:', this.expandedMap[key])
+      this.expandedMap = {
+        ...this.expandedMap,
+        [key]: !this.expandedMap[key]
+      }
+      console.log('new value:', this.expandedMap[key], 'expandedMap:', this.expandedMap)
+    },
+    getDisplayItems(container, status) {
+      const items = this.getWarehouseItems(container, status)
+      const expanded = this.isExpanded(container, status)
+      const key = this.getKey(container, status)
+      console.log('getDisplayItems', key, 'expanded:', expanded, 'items:', items.length)
+      if (items.length <= 5 || expanded) {
         return items
       }
-      
       return items.slice(0, 3)
     }
   }
