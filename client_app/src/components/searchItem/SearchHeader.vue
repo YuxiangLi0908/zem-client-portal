@@ -148,6 +148,10 @@ export default {
         console.error("Error:", error);
       }
     },
+    async searchAllContainers() {
+      // 跳转到所有容器页面
+      this.$router.push('/all-containers');
+    }
   }
 }
 </script>
