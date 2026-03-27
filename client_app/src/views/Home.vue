@@ -11,7 +11,7 @@
               <div class="col-md-12">
                   <div class="promobox style1 style2 clearfix" style="display: flex; align-items: center; justify-content: space-between; padding-left: 300px; padding-right: 300px;">
                       <h5 class="promobox-title" style="color: white; font-size: 1.5rem; margin: 0;">We are honored to be a leading and reliable partner in the field of transport in US</h5>
-                      <a class="button black sm" href="contact.html" style="background-color: black; color: white; padding: 8px 16px; white-space: nowrap;">contact us<i class="fa fa-chevron-right"></i></a>
+                      <router-link to="/contact" class="button black sm" style="background-color: black; color: white; padding: 8px 16px; white-space: nowrap; text-decoration: none;">contact us<i class="fa fa-chevron-right"></i></router-link>
                   </div>
               </div>
           </div>

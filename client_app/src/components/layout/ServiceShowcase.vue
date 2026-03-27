@@ -10,7 +10,7 @@
             <h5>Why choose ZEM transport?</h5>
             <div class="hover-content">             
               <p>At Canava Transport, we know time is of the essence...</p>
-              <router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>
+              <!--<router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>-->
             </div>
           </div>
         </div>
@@ -21,7 +21,7 @@
             <h5>Why choose ZEM transport?</h5>
             <div class="hover-content">           
               <p>At Canava Transport, we know time is of the essence...</p>
-              <router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>
+              <!--<router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>-->
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@
             <h5>Why choose ZEM transport?</h5>
             <div class="hover-content">             
               <p>At Canava Transport, we know time is of the essence...</p>
-              <router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>
+              <!--<router-link class="read-more" to="/about">READ MORE <i class="fas fa-chevron-right"></i></router-link>-->
             </div>
           </div>
         </div>
