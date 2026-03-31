@@ -148,15 +148,24 @@ export default {
         const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/user_containers', {
           headers: { Authorization: `Bearer ${token}` }
         })
-        const data = await res.json()
+        let data
+        try {
+          data = await res.json()
+        } catch (e) {
+          data = null
+        }
         if (!res.ok) {
-          this.error = data.detail || 'Failed to fetch containers'
+          const errorMsg = data 
+            ? (data.detail || JSON.stringify(data)) 
+            : `HTTP error! status: ${res.status}`
+          this.error = `Failed to fetch containers: ${errorMsg}`
+          console.error('Backend error:', errorMsg, 'Status:', res.status)
           return
         }
         this.containers = data
       } catch (e) {
         console.error("Network error:", e)
-        this.error = 'Failed to fetch containers'
+        this.error = `Failed to fetch containers: ${e.message || String(e)}`
       } finally {
         this.loading = false
       }
