@@ -159,7 +159,7 @@ export default {
             ? (data.detail || JSON.stringify(data)) 
             : `HTTP error! status: ${res.status}`
           this.error = `Failed to fetch containers: ${errorMsg}`
-          console.error('Backend error:', errorMsg, 'Status:', res.status)
+          console.error('Backend error:', errorMsg, 'Response status:', res.status, 'Full response:', data)
           return
         }
         this.containers = data
