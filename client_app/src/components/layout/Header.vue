@@ -32,6 +32,7 @@
           <ul class="menu">
             <li><router-link to="/">Home</router-link></li>
             <li><router-link to="/search">Search</router-link></li>
+            <li><router-link to="/rating">Rating</router-link></li>
             <!--
             <li class="menu-hidden-item"><router-link to="/about">Company</router-link></li>
             <li class="menu-hidden-item"><router-link to="/services">Services</router-link></li>
