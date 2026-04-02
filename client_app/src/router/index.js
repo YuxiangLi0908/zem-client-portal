@@ -6,6 +6,7 @@ import SearchPage from '../components/searchItem/Search.vue'
 import UserDashboard from '../views/UserDashboard.vue'
 import AllContainers from '../views/AllContainers.vue'
 import ContactPage from '../views/Contact.vue'
+import RatingPage from '../views/Rating.vue'
 
 const routes = [
   
@@ -16,6 +17,7 @@ const routes = [
   { path: '/dashboard', name: 'UserDashboard', component: UserDashboard},
   { path: '/all-containers', name: 'AllContainers', component: AllContainers},
   { path: '/contact', name: 'Contact', component: ContactPage},
+  { path: '/rating', name: 'Rating', component: RatingPage},
 ]
 
 const router = createRouter({
