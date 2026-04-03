@@ -126,7 +126,7 @@
       <div class="modal-overlay" v-if="showMaerskModal" @click.self="closeMaerskModal">
         <div class="maersk-modal">
           <div class="modal-header">
-            <h3 class="modal-title">Maersk 详细询价</h3>
+            <h3 class="modal-title">详细询价</h3>
             <button class="modal-close" @click="closeMaerskModal">
               &times;
             </button>
