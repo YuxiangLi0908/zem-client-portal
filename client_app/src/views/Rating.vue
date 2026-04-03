@@ -84,9 +84,26 @@
                         <span class="type-tag">{{ item.type }}</span>
                       </div>
                       <div class="item-body">
-                        <div class="price-display">
-                          <span class="price-label">价格</span>
-                          <span class="price-value">${{ item.price.toFixed(2) }}</span>
+                        <div v-if="item.type === '转运'" class="transfer-price-display">
+                          <div class="price-row">
+                            <span class="price-label">单板价格</span>
+                            <span class="price-value">${{ item.unit_price?.toFixed(2) }}</span>
+                          </div>
+                          <div class="price-row">
+                            <span class="price-label">计算板数</span>
+                            <span class="price-value">{{ item.pallets }}</span>
+                          </div>
+                          <div class="price-row">
+                            <span class="price-label">总价</span>
+                            <span class="price-value total">${{ item.price.toFixed(2) }}</span>
+                          </div>
+                        </div>
+                        <div v-else class="combina-price-display">
+                          <div class="price-display">
+                            <span class="price-label">价格</span>
+                            <span class="price-value">${{ item.price.toFixed(2) }}</span>
+                          </div>
+                          <div class="combina-hint">最终根据实际cbm占比计算</div>
                         </div>
                       </div>
                     </div>
@@ -747,6 +764,44 @@ export default {
   font-size: 28px;
   font-weight: 700;
   color: #32bfc0;
+}
+
+.transfer-price-display {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.price-row .price-label {
+  font-size: 13px;
+}
+
+.price-row .price-value {
+  font-size: 18px;
+}
+
+.price-row .price-value.total {
+  font-size: 24px;
+  color: #0f766e;
+}
+
+.combina-price-display {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.combina-hint {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
 }
 
 .no-price-display {
