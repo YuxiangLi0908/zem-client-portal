@@ -191,7 +191,10 @@ export default {
     formatTime(timestamp) {
       if (!timestamp) return '--'
       const date = new Date(timestamp)
-      return `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`
+      const year = date.getFullYear()
+      const month = (date.getMonth() + 1).toString().padStart(2, '0')
+      const day = date.getDate().toString().padStart(2, '0')
+      return `${year}-${month}-${day}`
     },
     getPriorityClass(item) {
       if (!item.shipment_schduled_at) return 'normal'
