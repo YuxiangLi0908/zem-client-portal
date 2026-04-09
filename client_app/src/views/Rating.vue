@@ -381,7 +381,7 @@ export default {
       
       try {
         
-        const res = await fetch('http://localhost:8000/query_quotation', {
+        const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/query_quotation', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -526,7 +526,7 @@ export default {
           items: items
         }
         
-        const res = await fetch('http://localhost:8000/maersk_quotation', {
+        const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/maersk_quotation', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
