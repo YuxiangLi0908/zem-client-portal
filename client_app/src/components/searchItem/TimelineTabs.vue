@@ -47,12 +47,11 @@ export default {
   methods: {
     formatTime(timestamp) {
       if (!timestamp) return ''
-      return new Date(timestamp).toLocaleString('zh-CN', {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
+      const date = new Date(timestamp)
+      const year = date.getFullYear()
+      const month = (date.getMonth() + 1).toString().padStart(2, '0')
+      const day = date.getDate().toString().padStart(2, '0')
+      return `${year}-${month}-${day}`
     },
     getStatusIcon(status) {
       const icons = {
