@@ -47,6 +47,9 @@ export default {
   methods: {
     formatTime(timestamp) {
       if (!timestamp) return ''
+      if (typeof timestamp === 'string') {
+        return timestamp
+      }
       const date = new Date(timestamp)
       const year = date.getFullYear()
       const month = (date.getMonth() + 1).toString().padStart(2, '0')
