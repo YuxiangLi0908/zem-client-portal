@@ -31,9 +31,6 @@
             <div class="card-header">
               <span class="destination">{{ item.destination }}</span>
               <span class="destination" v-if="['scheduled', 'shipped'].includes(status)">ETA {{ formatTime(item.shipment_appointment) }}</span>
-              <span class="priority-tag" :class="getPriorityClass(item)">
-                {{ getPriorityText(item) }}
-              </span>
             </div>
             
             <div class="card-body">
@@ -107,6 +104,14 @@
                         <div class="step-info">
                             <a :href="item.pod_link" target="_blank" v-if="item.pod_link">查看POD</a>
                             <span v-else>无链接</span>
+                        </div>
+                    </div>
+                    <div class="step" v-if="status === 'pod_uploaded' && item.shipping_order_link">
+                        <div class="step-icon">
+                            <i class="fas fa-file-invoice" style="font-size: 1.8em; margin-left:22px;">📄</i>
+                        </div>
+                        <div class="step-info">
+                            <a :href="item.shipping_order_link" target="_blank">查看出库单</a>
                         </div>
                     </div>
                 </template>
