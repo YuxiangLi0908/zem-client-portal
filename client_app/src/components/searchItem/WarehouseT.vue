@@ -106,13 +106,13 @@
                             <span v-else>无链接</span>
                         </div>
                     </div>
-                    <div class="step" v-if="status === 'pod_uploaded' && item.shipping_order_link">
-                        <div class="step-icon">
-                            <i class="fas fa-file-invoice" style="font-size: 1.8em; margin-left:22px;">📄</i>
-                        </div>
-                        <div class="step-info">
-                            <a :href="item.shipping_order_link" target="_blank">查看出库单</a>
-                        </div>
+                    <div class="step" v-if="status === 'pod_uploaded' && item.shipping_order_link && item.shipping_order_link !== 'No Link'">
+                      <div class="step-icon">
+                        <i class="fas fa-file-invoice" style="font-size: 1.8em; margin-left:22px;">📄</i>
+                      </div>
+                      <div class="step-info">
+                        <a :href="item.shipping_order_link" target="_blank">查看出库单</a>
+                      </div>
                     </div>
                 </template>
                 
