@@ -31,6 +31,9 @@
             <div class="card-header">
               <span class="destination">{{ item.destination }}</span>
               <span class="destination" v-if="['scheduled', 'shipped'].includes(status)">ETA {{ formatTime(item.shipment_appointment) }}</span>
+              <div v-if="item.exception_type" class="exception-badge" :title="item.exception_reason">
+                {{ getExceptionTypeDisplay(item.exception_type) }}
+              </div>
             </div>
             
             <div class="card-body">
@@ -217,6 +220,13 @@ export default {
         'urgent': '紧急',
         'completed': '已完成'
       }[cls]
+    },
+    getExceptionTypeDisplay(type) {
+      const typeMap = {
+        'unpack': '拆柜异常',
+        'appointment': '拿约异常'
+      }
+      return typeMap[type] || type
     }
   }
 }
@@ -398,6 +408,17 @@ export default {
   align-items: center;
   background: #f9f9f9;
   border-bottom: 1px solid #eee;
+}
+
+.exception-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: #ffebee;
+  color: #c62828;
+  cursor: help;
+  border: 1px solid #ef9a9a;
 }
 
 .step-icon {
