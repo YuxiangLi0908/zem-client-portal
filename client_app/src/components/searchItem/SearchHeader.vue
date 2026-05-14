@@ -34,12 +34,25 @@
             </button>
           </div>
 
+          <!--唛头搜索方式-->
+          <div v-if="searchMode === 'shipping_mark'" class="search-shipping-mark">
+            <input
+              v-model="shippingMark"
+              type="text"
+              placeholder="Enter shipping mark..."
+              class="search-input"
+            >
+            <button @click="trackShippingMark" class="search-btn">
+              <i class="fa fa-search"></i> Track
+            </button>
+          </div>
+
           <!-- 日期范围搜索 -->
           <div v-if="searchMode === 'date'" class="date-search-container">
             <div class="date-picker-group">
               <label>From:</label>
-              <input 
-                type="date" 
+              <input
+                type="date"
                 v-model="startDate"
                 class="date-input"
                 :max="endDate || ''"
@@ -47,15 +60,15 @@
             </div>
             <div class="date-picker-group">
               <label>To:</label>
-              <input 
-                type="date" 
+              <input
+                type="date"
                 v-model="endDate"
                 class="date-input"
                 :min="startDate || ''"
               >
             </div>
-            <button 
-              @click="searchByDate" 
+            <button
+              @click="searchByDate"
               class="search-btn"
               :disabled="!dateRangeValid"
             >
@@ -63,14 +76,14 @@
             </button>
           </div>
 
-          <button 
-            @click="searchAllContainers" 
+          <button
+            @click="searchAllContainers"
             class="search-all-btn"
             style="margin-top: 15px;"
           >
             <i class="fa fa-list"></i> View All My Containers
           </button>
-          
+
         </div>
     </div>
   </div>
@@ -83,6 +96,7 @@ export default {
     return {
       searchMode: 'container',
       containerNumber: '',
+      shippingMark: '',
       startDate: '',
       endDate: ''
     }
@@ -97,19 +111,42 @@ export default {
       const token = localStorage.getItem('token').trim();
       const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/order_tracking', {
           method: 'POST',
-          headers: { 
+          headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ container_number: this.containerNumber }) 
+          body: JSON.stringify({ container_number: this.containerNumber })
       });
-      
+
       if (res.ok){
         const responseData = await res.text();
         this.$router.push({
           path: '/search',
-          query: { 
-            data: encodeURIComponent(responseData) 
+          query: {
+            data: encodeURIComponent(responseData)
+          }
+        });
+      } else {
+        console.error("请求失败:", res.status);
+      }
+    },
+    async trackShippingMark() {
+      const token = localStorage.getItem('token').trim();
+      const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/order_tracking_shipping_mark', {
+          method: 'POST',
+          headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ shipping_mark: this.shippingMark })
+      });
+
+      if (res.ok){
+        const responseData = await res.text();
+        this.$router.push({
+          path: '/search',
+          query: {
+            data: encodeURIComponent(responseData)
           }
         });
       } else {
@@ -118,27 +155,27 @@ export default {
     },
     async searchByDate() {
       if (!this.dateRangeValid) return;
-      
+
       const token = localStorage.getItem('token').trim();
       try {
         const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/orders_by_date', {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             start_date: this.startDate,
-            end_date: this.endDate 
-          }) 
+            end_date: this.endDate
+          })
         });
 
         if (res.ok) {
           const responseData = await res.json();
           this.$router.push({
             path: '/search',
-            query: { 
-              data: encodeURIComponent(JSON.stringify(responseData)) 
+            query: {
+              data: encodeURIComponent(JSON.stringify(responseData))
             }
           });
         } else {
@@ -432,16 +469,16 @@ status-At-Port {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .date-picker-group {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .search-controls {
     flex-direction: column;
   }
-  
+
   .search-input {
     width: 100%;
   }

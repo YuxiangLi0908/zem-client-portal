@@ -8,20 +8,20 @@
     <div v-if="shouldShowEmptyContainer" class="empty-container">
       <div class="empty-content">
         <h3>未找到柜号信息</h3>
-        <p>请检查柜号是否正确，或联系客服人员核实</p>       
+        <p>请检查柜号是否正确，或联系客服人员核实</p>
         <div class="contact-row">
-          <div class="contact-item">           
-            <img 
-              src="@/assets/images/idCard/nj_sav_create_order.jpg" 
+          <div class="contact-item">
+            <img
+              src="@/assets/images/idCard/nj_sav_create_order.jpg"
               alt="NJ/SAV地区客服微信"
               class="wechat-qrcode"
             >
             <div class="region-badge">NJ/SAV地区</div>
           </div>
-          
-          <div class="contact-item">           
-            <img 
-              src="@/assets/images/idCard/la_create_order.jpg" 
+
+          <div class="contact-item">
+            <img
+              src="@/assets/images/idCard/la_create_order.jpg"
               alt="LA地区客服微信"
               class="wechat-qrcode"
             >
@@ -36,10 +36,10 @@
         <FlightSummary :data="preport_timenode" />
         <TimelineTabs :preport="preport_timenode" :postport="postport_timenode" />
         <WarehouseT :shipments="postport_timenode.shipment" />
-      </div>     
+      </div>
     </div>
-  </div>  
-  
+  </div>
+
 </template>
 
 <script>
@@ -119,13 +119,13 @@ export default {
           }),
           getStatusText: this.calculateStatusText(parsedData.preport_timenode, parsedData.postport_timenode)
         };
-        
+
         this.postport_timenode = {
           ...(parsedData.postport_timenode || {
             shipment: []
           }),
         };
-        
+
       } catch (error) {
         console.error('数据解析失败:', error);
       }

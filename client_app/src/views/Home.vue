@@ -43,6 +43,7 @@ export default {
     handleScroll() {
       const menu = document.querySelector('.floating-menu');
       const header = this.$refs.header?.$el || document.querySelector('header');
+      if (!menu || !header) return;
       if (window.scrollY > header.offsetHeight * 0.5) {
         menu.classList.add('sticky');
       } else {
@@ -81,7 +82,7 @@ body {
 .content {
   flex: 1;
   width: 100%;
-  overflow-y: auto;   
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
