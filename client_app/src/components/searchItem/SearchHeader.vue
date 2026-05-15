@@ -13,6 +13,12 @@
               <i class="fas fa-box"></i> By Container
             </button>
             <button
+              @click="searchMode = 'shipping_mark'"
+              :class="{ 'active-tab': searchMode === 'shipping_mark' }"
+            >
+              <i class="fas fa-box"></i> By ShippingMark
+            </button>
+            <button
               @click="searchMode = 'date'"
               :class="{ 'active-tab': searchMode === 'date' }"
             >
