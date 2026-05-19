@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <MainHeader />
     <div class="page-title-bar">
-      <h1 class="page-title">All My Containers</h1>
+      <h1 class="page-title">全部货柜</h1>
     </div>
 
     <div v-if="error" class="error-message">
@@ -20,15 +20,15 @@
         <table v-else>
           <thead>
             <tr>
-              <th>Container Number</th>
-              <th>Container Type</th>
-              <th>Status</th>
-              <th>Pending</th>
-              <th>Scheduled</th>
-              <th>In Transit</th>
-              <th>Delivered</th>
-              <th>Completed</th>
-              <th>Action</th>
+              <th>柜号</th>
+              <th>柜号类型</th>
+              <th>状态</th>
+              <th>未预约</th>
+              <th>已预约</th>
+              <th>运输中</th>
+              <th>已签收</th>
+              <th>已完成</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -107,7 +107,7 @@
               </td>
               <td>
                 <button @click="viewDetails(container)" class="view-btn">
-                  View Details
+                  查看详情
                 </button>
               </td>
             </tr>

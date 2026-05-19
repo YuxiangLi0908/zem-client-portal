@@ -30,14 +30,14 @@
         </div>       
         <nav id="mainnav" class="mainnav">
           <ul class="menu">
-            <li><router-link to="/">Home</router-link></li>
-            <li><router-link to="/search">Search</router-link></li>
-            <li><router-link to="/rating">Rating</router-link></li>
+            <li><router-link to="/">首页</router-link></li>
+            <li><router-link to="/search">搜索</router-link></li>
+            <li><router-link to="/rating">询价</router-link></li>
             <!--
             <li class="menu-hidden-item"><router-link to="/about">Company</router-link></li>
             <li class="menu-hidden-item"><router-link to="/services">Services</router-link></li>
             -->
-            <li><router-link to="/contact">Contact</router-link></li>
+            <li><router-link to="/contact">联系</router-link></li>
           </ul>
           <div class="menu-extra">
             <ul>
@@ -48,13 +48,13 @@
                 <li class="user-container">
                   <div class="user-info">
                     <span class="username">{{ currentUser }}</span>
-                    <a href="javascript:;" @click="handleLogout" class="logout-btn">Logout</a>
+                    <a href="javascript:;" @click="handleLogout" class="logout-btn">退出登录</a>
                   </div>
                 </li>
               </template>
               <template v-else>
                 <li class="login-container">
-                  <a href="javascript:;" @click="showLoginModal = true" class="login-btn">Login</a>
+                  <a href="javascript:;" @click="showLoginModal = true" class="login-btn">登录</a>
                 </li>
               </template>
             </ul>

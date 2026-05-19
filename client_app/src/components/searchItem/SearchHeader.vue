@@ -2,7 +2,7 @@
   <div class="search-banner" style="background-color: #32bfc0; padding: 30px 0;">
     <div class="container">
         <div class="search-box">
-          <h1 style="color: white; margin-bottom: 20px;"><b>Track Your Container</b></h1>
+          <h1 style="color: white; margin-bottom: 20px;"><b>追踪柜子动态</b></h1>
 
           <!-- 搜索模式切换 -->
           <div class="search-mode-tabs">
@@ -10,19 +10,19 @@
               @click="searchMode = 'container'"
               :class="{ 'active-tab': searchMode === 'container' }"
             >
-              <i class="fas fa-box"></i> By Container
+              <i class="fas fa-box"></i> 柜号查询
             </button>
             <button
               @click="searchMode = 'shipping_mark'"
               :class="{ 'active-tab': searchMode === 'shipping_mark' }"
             >
-              <i class="fas fa-box"></i> By ShippingMark
+              <i class="fas fa-box"></i> 唛头查询
             </button>
             <button
               @click="searchMode = 'date'"
               :class="{ 'active-tab': searchMode === 'date' }"
             >
-              <i class="fas fa-calendar-alt"></i> By Date
+              <i class="fas fa-calendar-alt"></i> 日期查询
             </button>
           </div>
 
@@ -32,11 +32,11 @@
             <input
               v-model="containerNumber"
               type="text"
-              placeholder="Enter container number..."
+              placeholder="输入柜号..."
               class="search-input"
             >
             <button @click="trackOrder" class="search-btn">
-              <i class="fa fa-search"></i> Track
+              <i class="fa fa-search"></i> 查询
             </button>
           </div>
 
@@ -45,11 +45,11 @@
             <input
               v-model="shippingMark"
               type="text"
-              placeholder="Enter shipping mark..."
+              placeholder="输入唛头..."
               class="search-input"
             >
             <button @click="trackShippingMark" class="search-btn">
-              <i class="fa fa-search"></i> Track
+              <i class="fa fa-search"></i> 查询
             </button>
           </div>
 
@@ -78,7 +78,7 @@
               class="search-btn"
               :disabled="!dateRangeValid"
             >
-              <i class="fa fa-search"></i> Search
+              <i class="fa fa-search"></i> 搜索
             </button>
           </div>
 
@@ -87,7 +87,7 @@
             class="search-all-btn"
             style="margin-top: 15px;"
           >
-            <i class="fa fa-list"></i> View All My Containers
+            <i class="fa fa-list"></i> 查看所有柜货
           </button>
 
         </div>
