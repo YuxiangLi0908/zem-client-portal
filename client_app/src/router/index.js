@@ -33,7 +33,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Login', 'Home', 'Contact']
+  const publicPages = ['Login', '首页', 'Contact']
   const authRequired = !publicPages.includes(to.name)
   const token = localStorage.getItem('token')
 
