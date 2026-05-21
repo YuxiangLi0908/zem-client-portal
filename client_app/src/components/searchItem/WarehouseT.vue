@@ -31,7 +31,6 @@
             <div class="card-header">
         <span class="destination">{{ item.destination }}</span>
         <span v-if="item.appointment_id && status !== 'unscheduled'" class="appointment-id">ISA: {{ item.appointment_id }}</span>
-        <span class="destination" v-if="['scheduled', 'shipped'].includes(status)">ETA {{ formatTime(item.shipment_appointment) }}</span>
         <div v-if="item.exception_type" class="exception-badge" :title="item.exception_reason">
           {{ getExceptionTypeDisplay(item.exception_type) }}
         </div>
