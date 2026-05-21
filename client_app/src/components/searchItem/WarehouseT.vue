@@ -198,11 +198,12 @@ export default {
   methods: {
     formatTime(timestamp) {
       if (!timestamp) return '--'
-      const date = new Date(timestamp)
-      const year = date.getFullYear()
-      const month = (date.getMonth() + 1).toString().padStart(2, '0')
-      const day = date.getDate().toString().padStart(2, '0')
-      return `${year}-${month}-${day}`
+      // 直接字符串截取，不用 Date 对象解析，避免时区转换
+      const str = timestamp.toString()
+      if (str.length >= 10) {
+        return str.substring(0, 10)
+      }
+      return '--'
     },
     getPriorityClass(item) {
       if (!item.shipment_schduled_at) return 'normal'
