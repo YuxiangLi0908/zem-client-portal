@@ -53,8 +53,43 @@
               </div>
               
               <div class="horizontal-timeline">
-                <!-- 运输中状态 -->
-                <template v-if="status === 'shipped'">
+                <!-- 外配类型处理 -->
+                <template v-if="item.shipment_type === '外配'">
+                  <div class="time-item">
+                    <div class="time-label">预约</div>
+                    <div class="time-value">{{ formatTime(item.shipment_appointment) }}</div>
+                  </div>
+                  <div class="time-separator">→</div>
+                  <div class="time-item">
+                    <div class="time-label">发车</div>
+                    <div class="time-value">{{ formatTime(subtract12Hours(item.shipment_appointment)) }}</div>
+                  </div>
+                  <div class="time-separator">→</div>
+                  <div class="time-item">
+                    <div class="time-label">送达</div>
+                    <div class="time-value">{{ formatTime(item.shipment_appointment) }}</div>
+                  </div>
+                  <div class="step" v-if="status === 'pod_uploaded'">
+                      <div class="step-icon">
+                          <i class="fas fa-paperclip" style="font-size: 1.8em; margin-left:22px;">📎</i>
+                      </div>
+                      <div class="step-info">
+                          <a :href="item.pod_link" target="_blank" v-if="item.pod_link">查看POD</a>
+                          <span v-else>无链接</span>
+                      </div>
+                  </div>
+                  <div class="step" v-if="status === 'pod_uploaded' && item.shipping_order_link && item.shipping_order_link !== 'No Link'">
+                    <div class="step-icon">
+                      <i class="fas fa-file-invoice" style="font-size: 1.8em; margin-left:22px;">📄</i>
+                    </div>
+                    <div class="step-info">
+                      <a :href="item.shipping_order_link" target="_blank">查看出库单</a>
+                    </div>
+                  </div>
+                </template>
+                
+                <!-- 非外配类型 - 运输中状态 -->
+                <template v-else-if="status === 'shipped'">
                   <div class="time-item">
                     <div class="time-label">预约</div>
                     <div class="time-value">{{ formatTime(item.shipment_appointment) }}</div>
@@ -66,7 +101,7 @@
                   </div>
                 </template>
                 
-                <!-- 已送达状态 -->
+                <!-- 非外配类型 - 已送达状态 -->
                 <template v-else-if="status === 'arrived'">
                   <div class="time-item">
                     <div class="time-label">预约</div>
@@ -84,7 +119,7 @@
                   </div>
                 </template>
                 
-                <!-- 已完成状态 -->
+                <!-- 非外配类型 - 已完成状态 -->
                 <template v-else-if="status === 'pod_uploaded'">
                     <div class="time-item">
                         <div class="time-label">预约</div>
@@ -123,7 +158,7 @@
                 <template v-else-if="status === 'scheduled'">
                   <div class="time-item highlight">
                     <div class="time-label">预约</div>
-                    <div class="time-value">{{ formatTime(item.shipment_schduled_at) }}</div>
+                    <div class="time-value">{{ formatTime(item.shipment_appointment) }}</div>
                   </div>
                 </template>
               </div>
@@ -205,10 +240,20 @@ export default {
       }
       return '--'
     },
+    subtract12Hours(timestamp) {
+      if (!timestamp) return '--'
+      try {
+        const date = new Date(timestamp)
+        date.setHours(date.getHours() - 12)
+        return date.toISOString().substring(0, 10)
+      } catch (e) {
+        return '--'
+      }
+    },
     getPriorityClass(item) {
-      if (!item.shipment_schduled_at) return 'normal'
+      if (!item.shipment_appointment) return 'normal'
       if (!item.arrived_at) {
-        const scheduled = new Date(item.shipment_schduled_at)
+        const scheduled = new Date(item.shipment_appointment)
         const now = new Date()
         return now > new Date(scheduled.getTime() + 24*3600*1000) ? 'urgent' : 'normal'
       }
