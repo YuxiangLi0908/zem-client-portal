@@ -243,9 +243,19 @@ export default {
     subtract12Hours(timestamp) {
       if (!timestamp) return '--'
       try {
-        const date = new Date(timestamp)
-        date.setHours(date.getHours() - 12)
-        return date.toISOString().substring(0, 10)
+        const str = timestamp.toString()
+        if (str.length < 10) return '--'
+        const datePart = str.substring(0, 10)
+        const parts = datePart.split('-')
+        const year = parseInt(parts[0])
+        const month = parseInt(parts[1])
+        const day = parseInt(parts[2])
+        const d = new Date(year, month - 1, day)
+        d.setDate(d.getDate() - 1)
+        const y = d.getFullYear()
+        const m = (d.getMonth() + 1).toString().padStart(2, '0')
+        const dd = d.getDate().toString().padStart(2, '0')
+        return `${y}-${m}-${dd}`
       } catch (e) {
         return '--'
       }
@@ -253,9 +263,14 @@ export default {
     getPriorityClass(item) {
       if (!item.shipment_appointment) return 'normal'
       if (!item.arrived_at) {
-        const scheduled = new Date(item.shipment_appointment)
+        const str = item.shipment_appointment.toString()
+        if (str.length < 10) return 'normal'
+        const datePart = str.substring(0, 10)
+        const parts = datePart.split('-')
+        const scheduled = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
         const now = new Date()
-        return now > new Date(scheduled.getTime() + 24*3600*1000) ? 'urgent' : 'normal'
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        return today > new Date(scheduled.getTime() + 24*3600*1000) ? 'urgent' : 'normal'
       }
       return 'completed'
     },

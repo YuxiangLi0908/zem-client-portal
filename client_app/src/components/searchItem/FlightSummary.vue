@@ -79,17 +79,21 @@ export default {
     etaStatus() {
       if (!this.vessel.vessel_eta) return null;
       
-      const etaDate = new Date(this.vessel.vessel_eta);
-      const now = new Date();
-      const threeDaysLater = new Date();
-      threeDaysLater.setDate(now.getDate() + 3);
+      const etaStr = this.vessel.vessel_eta.toString()
+      if (etaStr.length < 10) return null
+      const etaParts = etaStr.substring(0, 10).split('-')
+      const etaDate = new Date(parseInt(etaParts[0]), parseInt(etaParts[1]) - 1, parseInt(etaParts[2]))
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      const threeDaysLater = new Date(today)
+      threeDaysLater.setDate(today.getDate() + 3)
       
-      if (etaDate < now) {
-        return 'arrived'; // 已到港
+      if (etaDate < today) {
+        return 'arrived';
       } else if (etaDate <= threeDaysLater) {
-        return 'coming'; // 三天内到港
+        return 'coming';
       }
-      return null; // 三天外不显示
+      return null;
     },
     etaStatusText() {
       switch(this.etaStatus) {
@@ -125,8 +129,13 @@ export default {
   methods: {
     calculateDelay(retrieval) {
       if (!retrieval.target_retrieval_timestamp || !retrieval.actual_retrieval_timestamp) return 0
-      const target = new Date(retrieval.target_retrieval_timestamp)
-      const actual = new Date(retrieval.actual_retrieval_timestamp)
+      const targetStr = retrieval.target_retrieval_timestamp.toString()
+      const actualStr = retrieval.actual_retrieval_timestamp.toString()
+      if (targetStr.length < 10 || actualStr.length < 10) return 0
+      const tParts = targetStr.substring(0, 10).split('-')
+      const aParts = actualStr.substring(0, 10).split('-')
+      const target = new Date(parseInt(tParts[0]), parseInt(tParts[1]) - 1, parseInt(tParts[2]))
+      const actual = new Date(parseInt(aParts[0]), parseInt(aParts[1]) - 1, parseInt(aParts[2]))
       return Math.round((actual - target) / (1000 * 60 * 60))
     }
   }
