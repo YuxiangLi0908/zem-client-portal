@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     filteredPreportHistory() {
-      const mainEvents = ['ORDER_CREATED', 'ARRIVED_AT_PORT', 'PORT_UNLOADING', 'PORT_PICKUP_SCHEDULED', 'ARRIVE_AT_WAREHOUSE', 'OFFLOAD']
+      const mainEvents = ['ORDER_CREATED', 'ARRIVED_AT_PORT', 'PORT_UNLOADING', 'PORT_PICKUP_SCHEDULED', 'ARRIVE_AT_WAREHOUSE', 'OFFLOAD', 'EMPTY_RETURN']
       return (this.preport.history || []).filter(event => 
         mainEvents.includes(event.status)
       )
@@ -47,11 +47,11 @@ export default {
   methods: {
     formatTime(timestamp) {
       if (!timestamp) return ''
-      const date = new Date(timestamp)
-      const year = date.getFullYear()
-      const month = (date.getMonth() + 1).toString().padStart(2, '0')
-      const day = date.getDate().toString().padStart(2, '0')
-      return `${year}-${month}-${day}`
+      const str = timestamp.toString()
+      if (str.length >= 10) {
+        return str.substring(0, 10)
+      }
+      return ''
     },
     getStatusIcon(status) {
       const icons = {
@@ -61,7 +61,8 @@ export default {
         'PORT_PICKUP_SCHEDULED': '📅',
         'IN_TRANSIT': '⛴️',
         'ARRIVE_AT_WAREHOUSE': '🏭',
-        'OFFLOAD': '🛠️'
+        'OFFLOAD': '🛠️',
+        'EMPTY_RETURN': '📦'
       }
       return icons[status] || '●'
     }
