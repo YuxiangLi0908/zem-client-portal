@@ -141,50 +141,92 @@
       </section>
       
       <div class="modal-overlay" v-if="showMaerskModal" @click.self="closeMaerskModal">
-        <div class="maersk-modal">
+        <div class="maersk-modal multi-carrier-modal">
           <div class="modal-header">
-            <h3 class="modal-title">详细询价</h3>
+            <h3 class="modal-title">三方询价</h3>
             <button class="modal-close" @click="closeMaerskModal">
               &times;
             </button>
-            
           </div>
           <div class="modal-body">
             <div class="form-row">
               <div class="form-group half">
-                <label class="form-label">起始仓库 <span class="required">*</span></label>
-                <select v-model="maerskForm.warehouse" class="form-select" @change="handleWarehouseChange">
-                  <option value="NJ">NJ</option>
-                  <option value="SAV">SAV</option>
-                  <option value="LA">LA</option>
-                </select>
+                <label class="form-label">取件日期 <span class="required">*</span></label>
+                <input type="date" v-model="maerskForm.pickupDate" class="form-input">
               </div>
-              <div class="form-group half">
-                <label class="form-label">目的邮编 <span class="required">*</span></label>
-                <input type="text" v-model="maerskForm.destZip" class="form-input" placeholder="请输入目的邮编">
+              <div class="form-group half compact-fields">
+                <div>
+                  <label class="form-label">运输类型</label>
+                  <select v-model.number="maerskForm.quoteType" class="form-select">
+                    <option :value="1">LTL</option><option :value="2">FTL</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">FTL 车型</label>
+                  <select v-model.number="maerskForm.carType" class="form-select" :disabled="maerskForm.quoteType !== 2">
+                    <option :value="1">53尺厢式货车</option><option :value="2">冷链车</option>
+                    <option :value="3">48尺平板车</option><option :value="10">26尺小车</option>
+                    <option :value="12">26尺小车带尾板</option><option :value="13">快速拖车</option>
+                  </select>
+                </div>
               </div>
             </div>
-            
+
+            <div class="form-row address-row">
+              <div class="address-card">
+                <h4>发货地址</h4>
+                <select v-model="maerskForm.originWarehouse" class="form-select" @change="handleWarehouseChange">
+                  <option value="">请选择 ZEM 仓库</option>
+                  <option v-for="item in quoteOptions.origins" :key="item.warehouse" :value="item.warehouse">{{ item.warehouse }}</option>
+                </select>
+                <select v-model.number="maerskForm.originType" class="form-select" disabled>
+                  <option :value="1">商业地址</option><option :value="2">住宅地址</option><option :value="3">装卸平台</option>
+                </select>
+                <input v-model="maerskForm.originDetailAddress" class="form-input" placeholder="详细地址" readonly>
+                <div class="address-parts">
+                  <input v-model="maerskForm.originCity" class="form-input" placeholder="城市" readonly>
+                  <input v-model="maerskForm.originState" class="form-input state-input" placeholder="州" maxlength="2" readonly>
+                  <input v-model="maerskForm.originPostCode" class="form-input" placeholder="邮编" readonly>
+                </div>
+              </div>
+              <div class="address-card">
+                <h4>收货地址</h4>
+                <input v-model.trim="maerskForm.destinationWarehouse" class="form-input" placeholder="收货仓点，如 ONT8" @change="handleDestinationChange">
+                <select v-model.number="maerskForm.destinationType" class="form-select">
+                  <option :value="1">商业地址</option><option :value="2">住宅地址</option><option :value="3">装卸平台</option>
+                </select>
+                <input v-model="maerskForm.destinationDetailAddress" class="form-input" placeholder="详细地址（可选）">
+                <div class="address-parts">
+                  <input v-model="maerskForm.destinationCity" class="form-input" placeholder="城市 *">
+                  <input v-model="maerskForm.destinationState" class="form-input state-input" placeholder="州 *" maxlength="2">
+                  <input v-model="maerskForm.destinationPostCode" class="form-input" placeholder="邮编 *">
+                </div>
+              </div>
+            </div>
+
             <div class="form-row">
               <div class="form-group half">
-                <label class="form-label">发货日期 <span class="required">*</span></label>
-                <input type="date" v-model="maerskForm.shipDate" class="form-input">
+                <label class="form-label">Freight Class</label>
+                <input v-model="maerskForm.freightClass" class="form-input" placeholder="留空则自动计算">
               </div>
               <div class="form-group half">
-                <label class="form-label">是否需要 Liftgate</label>
-                <select v-model="maerskForm.needLiftgate" class="form-select">
-                  <option value="否">否</option>
-                  <option value="是">是</option>
-                </select>
+                <label class="form-label">申报价值 ($) <span class="required">*</span></label>
+                <input type="number" min="1" step="0.01" v-model.number="maerskForm.declaredValue" class="form-input">
               </div>
             </div>
-            
+
+            <div class="option-row">
+              <label><span>货物单位</span><select v-model.number="maerskForm.commodityUnit" class="form-select"><option :value="11">PALLETS</option><option :value="2">BOXES</option><option :value="3">CARTONS</option><option :value="14">CRATE</option></select></label>
+              <label><span>托盘类型</span><select v-model.number="maerskForm.palletType" class="form-select"><option :value="1">PALLETS</option><option :value="2">CRATES</option></select></label>
+              <label class="checkbox-label"><input type="checkbox" v-model="maerskForm.needLiftgate"> 需要 Liftgate</label>
+            </div>
+
             <div class="form-group items-group">
               <div class="items-label-row">
                 <div class="items-label-left">
                   <label class="form-label">货物明细</label>
                   <span class="required">*</span>
-                  <span class="items-count">（{{ maerskForm.items.length }}板）</span>
+                  <span class="items-count">（{{ maerskForm.items.length }}条）</span>
                 </div>
                 <span class="items-hint">每行记录为一个板子</span>
               </div>
@@ -240,42 +282,19 @@
             </div>
             
             <div v-if="maerskResult" class="maersk-result">
-              <h4 class="result-title">询价结果</h4>
-              <div v-if="maerskResult.rating" class="result-summary">
-                <div class="summary-row">
-                  <span class="summary-label">运输路线：</span>
-                  <span class="summary-value">{{ maerskResult.shipper?.Zipcode || '-' }} → {{ maerskResult.consignee?.Zipcode || '-' }}</span>
-                </div>
-                <div class="summary-row">
-                  <span class="summary-label">发货日期：</span>
-                  <span class="summary-value">{{ maerskResult.rating?.ShipDate || '-' }}</span>
-                </div>
-              </div>
-              <div v-for="(quote, index) in sortedQuotes" :key="index" class="quote-card" :class="{ 'best-value': index === 0 }">
-                <div class="quote-header">
-                  <div class="quote-service">
-                    <span class="service-name">{{ quote.DisplayService }}</span>
-                    <span v-if="index === 0" class="best-badge">推荐方案</span>
+              <h4 class="result-title">询价结果 <small v-if="maerskResult.freightClass">Freight Class：{{ maerskResult.freightClass }}</small></h4>
+              <div class="carrier-results">
+                <section v-for="carrier in visibleCarrierResults" :key="carrier.key" class="carrier-card">
+                  <h4>{{ carrier.name }}</h4>
+                  <div v-if="carrier.rows.length">
+                    <div v-for="(quote, index) in carrier.rows" :key="index" class="carrier-rate">
+                      <strong>{{ quote.name }}</strong><span class="quote-price">{{ formatMoney(quote.price) }}</span>
+                      <div v-if="quote.serviceCode" class="rate-note">服务代码：{{ quote.serviceCode }}</div>
+                      <div v-if="quote.days" class="rate-note">预计 {{ quote.days }} 天</div>
+                    </div>
                   </div>
-                  <div class="quote-price">${{ (quote.TotalQuote || 0).toFixed(2) }}</div>
-                </div>
-                <div class="quote-details">
-                  <div class="detail-item">
-                    <span class="detail-label">预计送达</span>
-                    <span class="detail-value">{{ quote.DeliveryDate || '-' }}</span>
-                  </div>
-                  <div class="detail-item">
-                    <span class="detail-label">计费重量</span>
-                    <span class="detail-value">{{ quote.ChargeWeight || '-' }} lbs</span>
-                  </div>
-                </div>
-                <div class="quote-breakdown" v-if="quote.Breakdowns && quote.Breakdowns.length > 0">
-                  <div class="breakdown-title">费用明细</div>
-                  <div v-for="(bd, bdIndex) in quote.Breakdowns" :key="bdIndex" class="breakdown-item">
-                    <span class="breakdown-name">{{ getChargeName(bd.BillCodeName) }}</span>
-                    <span class="breakdown-price">${{ (bd.Charge || 0).toFixed(2) }}</span>
-                  </div>
-                </div>
+                  <div v-else class="carrier-empty">{{ carrier.error || '暂未返回可用报价' }}</div>
+                </section>
               </div>
             </div>
           </div>
@@ -322,12 +341,15 @@ export default {
       error: null,
       showMaersk: false,
       showMaerskModal: false,
+      quoteOptions: { origins: [], destinations: {} },
       maerskForm: {
-        warehouse: 'NJ',
-        originZip: '07001',
-        destZip: '',
-        shipDate: tomorrowStr,
-        needLiftgate: '否',
+        originWarehouse: '', originType: 3, originDetailAddress: '',
+        originCity: '', originState: '', originPostCode: '',
+        destinationWarehouse: '', destinationType: 1, destinationDetailAddress: '',
+        destinationCity: '', destinationState: '', destinationPostCode: '',
+        pickupDate: tomorrowStr, quoteType: 1, carType: 1,
+        freightClass: '', declaredValue: null, commodityUnit: 11, palletType: 1,
+        needLiftgate: false,
         items: [{ length: '', width: '', height: '', pieces: '', weight: '', description: '' }]
       },
       maerskLoading: false,
@@ -336,9 +358,26 @@ export default {
     }
   },
   computed: {
-    sortedQuotes() {
-      if (!this.maerskResult || !this.maerskResult.quotes) return []
-      return [...this.maerskResult.quotes].sort((a, b) => (a.TotalQuote || 0) - (b.TotalQuote || 0))
+    visibleCarrierResults() {
+      const results = this.maerskResult?.results || {}
+      const maersk = this.findNestedArray(results.maersk?.data, 'quotes')
+      const kakas = this.findNestedArray(results.kakas?.data, 'rates')
+      return [
+        {
+          key: 'maersk', name: 'Maersk', error: results.maersk?.error,
+          rows: maersk.map(q => ({
+            name: q.DisplayService || q.carrierName || 'Maersk',
+            serviceCode: q.Service || '', price: q.TotalQuote ?? q.totalPrice ?? q.price
+          }))
+        },
+        {
+          key: 'kakas', name: '卡卡省', error: results.kakas?.error,
+          rows: kakas.map(q => ({
+            name: q.carrierName || q.carrierCode || '卡卡省承运商',
+            price: q.totalPrice, days: q.carrierTransitDays
+          }))
+        }
+      ]
     }
   },
   methods: {
@@ -417,11 +456,23 @@ export default {
         this.loading = false
       }
     },
-    openMaerskModal() {
+    async openMaerskModal() {
       this.showMaerskModal = true
       this.maerskError = null
       this.maerskResult = null
       this.resetMaerskForm()
+      try {
+        await this.loadQuoteOptions()
+        const destination = String(this.formData.destination || '').trim().toUpperCase()
+        this.maerskForm.destinationWarehouse = destination
+        this.handleDestinationChange()
+        if (this.quoteOptions.origins.length) {
+          this.maerskForm.originWarehouse = this.quoteOptions.origins[0].warehouse
+          this.handleWarehouseChange()
+        }
+      } catch (e) {
+        this.maerskError = `地址配置加载失败: ${e.message || String(e)}`
+      }
     },
     closeMaerskModal() {
       this.showMaerskModal = false
@@ -432,17 +483,43 @@ export default {
       const tomorrowStr = tomorrow.toISOString().split('T')[0]
       
       this.maerskForm = {
-        warehouse: 'NJ',
-        originZip: '07001',
-        destZip: '',
-        shipDate: tomorrowStr,
-        needLiftgate: '否',
+        originWarehouse: '', originType: 3, originDetailAddress: '',
+        originCity: '', originState: '', originPostCode: '',
+        destinationWarehouse: '', destinationType: 1, destinationDetailAddress: '',
+        destinationCity: '', destinationState: '', destinationPostCode: '',
+        pickupDate: tomorrowStr, quoteType: 1, carType: 1,
+        freightClass: '', declaredValue: null, commodityUnit: 11, palletType: 1,
+        needLiftgate: false,
         items: [{ length: '', width: '', height: '', pieces: '', weight: '', description: '' }]
       }
     },
+    async loadQuoteOptions() {
+      if (this.quoteOptions.origins.length) return
+      const token = localStorage.getItem('token')
+      const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/multi_carrier_quote_options', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.detail || '无法读取询价地址配置')
+      this.quoteOptions = data
+    },
     handleWarehouseChange() {
-      const zipMap = { 'NJ': '07001', 'SAV': '31326', 'LA': '91761' }
-      this.maerskForm.originZip = zipMap[this.maerskForm.warehouse]
+      const address = this.quoteOptions.origins.find(item => item.warehouse === this.maerskForm.originWarehouse) || {}
+      this.maerskForm.originDetailAddress = address.detailAddress || ''
+      this.maerskForm.originCity = address.city || ''
+      this.maerskForm.originState = address.state || ''
+      this.maerskForm.originPostCode = address.postCode || ''
+      this.maerskForm.originType = Number(address.type || 3)
+    },
+    handleDestinationChange() {
+      const code = String(this.maerskForm.destinationWarehouse || '').trim().toUpperCase()
+      this.maerskForm.destinationWarehouse = code
+      const matchedKey = Object.keys(this.quoteOptions.destinations).find(key => key.trim().toUpperCase() === code)
+      const address = matchedKey ? this.quoteOptions.destinations[matchedKey] : {}
+      this.maerskForm.destinationDetailAddress = address.location || ''
+      this.maerskForm.destinationCity = address.city || ''
+      this.maerskForm.destinationState = address.state || ''
+      this.maerskForm.destinationPostCode = address.zipcode || ''
     },
     addItem() {
       this.maerskForm.items.push({ length: '', width: '', height: '', pieces: '', weight: '', description: '' })
@@ -457,42 +534,45 @@ export default {
         item[field] = Math.ceil(Number(item[field]))
       }
     },
-    getChargeName(billCodeName) {
-      const chargeNameMap = {
-        'FREIGHT CHARGES': '基础运费',
-        'FUEL SURCHARGE': '燃油附加费',
-        'ADDTL LABOR': '额外人工费',
-        'LIFTGATE PICKUP': '提货升降机费',
-        'LIFTGATE DELIVERY': '送货升降机费',
-        'LIMITED ACCESS PICKUP': '受限区域提货费',
-        'LIMITED ACCESS DELIVERY': '受限区域送货费',
-        'RESIDENTIAL PICKUP': '住宅提货费',
-        'RESIDENTIAL DELIVERY': '住宅送货费'
+    findNestedArray(value, key) {
+      if (!value || typeof value !== 'object') return []
+      if (Array.isArray(value[key])) return value[key]
+      for (const child of Object.values(value)) {
+        const found = this.findNestedArray(child, key)
+        if (found.length) return found
       }
-      return chargeNameMap[billCodeName] || billCodeName
+      return []
+    },
+    formatMoney(value) {
+      return Number.isFinite(Number(value)) ? `$${Number(value).toFixed(2)}` : '价格待返回'
     },
     async submitMaerskQuote() {
       this.maerskError = null
       this.maerskResult = null
       
-      if (!this.maerskForm.destZip) {
-        this.maerskError = '请填写目的邮编'
+      const required = ['originWarehouse', 'originCity', 'originState', 'originPostCode',
+        'destinationWarehouse', 'destinationCity', 'destinationState', 'destinationPostCode']
+      if (required.some(field => !String(this.maerskForm[field] || '').trim())) {
+        this.maerskError = '请填写完整的发货和收货地址'
         return
       }
-      
-      if (!this.maerskForm.shipDate) {
-        this.maerskError = '请选择发货日期'
+      if (!this.maerskForm.pickupDate) {
+        this.maerskError = '请选择取件日期'
+        return
+      }
+      if (!this.maerskForm.declaredValue || Number(this.maerskForm.declaredValue) <= 0) {
+        this.maerskError = '请填写有效的申报价值'
         return
       }
       
       const tomorrow = new Date()
       tomorrow.setDate(tomorrow.getDate() + 1)
       tomorrow.setHours(0, 0, 0, 0)
-      const shipDateObj = new Date(this.maerskForm.shipDate)
+      const shipDateObj = new Date(this.maerskForm.pickupDate)
       shipDateObj.setHours(0, 0, 0, 0)
       
       if (shipDateObj < tomorrow) {
-        this.maerskError = '发货日期不能早于明天'
+        this.maerskError = '取件日期不能早于明天'
         return
       }
       
@@ -518,15 +598,9 @@ export default {
       
       try {
         const token = localStorage.getItem('token')
-        const requestData = {
-          warehouse: this.maerskForm.warehouse,
-          dest_zip: this.maerskForm.destZip,
-          ship_date: this.maerskForm.shipDate,
-          need_liftgate: this.maerskForm.needLiftgate,
-          items: items
-        }
+        const requestData = { ...this.maerskForm, items }
         
-        const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/maersk_quotation', {
+        const res = await fetch('https://zemclientaca.kindmoss-a5050a64.eastus.azurecontainerapps.io/multi_carrier_quotation', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -545,7 +619,7 @@ export default {
         this.maerskResult = data.data
         
       } catch (e) {
-        console.error('Maersk quote error:', e)
+        console.error('Multi-carrier quote error:', e)
         this.maerskError = `询价失败: ${e.message || String(e)}`
       } finally {
         this.maerskLoading = false
@@ -923,6 +997,108 @@ export default {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
+.multi-carrier-modal {
+  max-width: 1180px;
+}
+
+.compact-fields,
+.address-parts,
+.option-row,
+.carrier-results {
+  display: grid;
+  gap: 12px;
+}
+
+.compact-fields {
+  grid-template-columns: 1fr 1.4fr;
+}
+
+.address-row {
+  margin: 18px 0;
+}
+
+.address-card {
+  border: 1px solid #dbe4ee;
+  border-radius: 10px;
+  padding: 16px;
+  background: #fbfdff;
+}
+
+.address-card h4 {
+  margin: 0 0 12px;
+  color: #334155;
+}
+
+.address-card > .form-input,
+.address-card > .form-select {
+  margin-bottom: 10px;
+}
+
+.address-parts {
+  grid-template-columns: 1.5fr 0.65fr 1fr;
+}
+
+.option-row {
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.option-row label > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.checkbox-label {
+  padding: 12px 4px;
+  color: #334155;
+}
+
+.carrier-results {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.carrier-card {
+  border: 1px solid #dbe4ee;
+  border-radius: 10px;
+  padding: 16px;
+  background: #fff;
+}
+
+.carrier-card h4 {
+  margin: 0 0 12px;
+  color: #334155;
+}
+
+.carrier-rate {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.carrier-rate .quote-price {
+  float: right;
+  font-size: 19px;
+}
+
+.rate-note,
+.carrier-empty {
+  margin-top: 5px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.result-title small {
+  float: right;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -1293,6 +1469,13 @@ export default {
   }
   
   .quote-details {
+    grid-template-columns: 1fr;
+  }
+
+  .compact-fields,
+  .address-parts,
+  .option-row,
+  .carrier-results {
     grid-template-columns: 1fr;
   }
   
